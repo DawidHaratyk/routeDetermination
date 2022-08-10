@@ -1,4 +1,5 @@
 import React from "react";
+import { NavLink } from "react-router-dom";
 
 export function RouteDetermination() {
   return (
@@ -19,9 +20,12 @@ export function RouteDetermination() {
               className="border-[1px] border-black border-right-[1px] py-3 px-4 text-lg w-5/12 border-opacity-40"
               placeholder="To where"
             />
-            <button className="bg-green-500 w-2/12 rounded-r-lg uppercase text-white font-bold">
+            <NavLink
+              to="/foundRoute"
+              className="bg-green-500 w-2/12 rounded-r-lg uppercase text-white font-bold text-center py-3"
+            >
               Search
-            </button>
+            </NavLink>
           </div>
         </div>
         <button className="text-cyan-700 font-bold">Add stop on the way</button>

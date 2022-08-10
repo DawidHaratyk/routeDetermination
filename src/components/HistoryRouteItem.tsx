@@ -13,7 +13,7 @@ export function HistoryRouteItem() {
         <div>
           <span className="text-xs inline-block w-60">
             Odległość drogowa:
-            <span className="font-semibold"> 18.18 km</span>
+            <span className="font-semibold"> 18.19 km</span>
           </span>
           <span className="text-xs inline-block w-60">
             Czas przejazdu:
