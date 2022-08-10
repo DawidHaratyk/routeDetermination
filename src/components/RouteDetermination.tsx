@@ -1,7 +1,30 @@
-import React from "react";
+import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
 
+interface RouteInfo {
+  routeFrom: string;
+  routeTo: string;
+}
+
 export function RouteDetermination() {
+  const [routeInfo, setRouteInfo] = useState<RouteInfo>({
+    routeFrom: "",
+    routeTo: "",
+  });
+  // replace useState with context
+
+  const { routeFrom, routeTo } = routeInfo;
+
+  const handleRouteInfoChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    const currentRouteKey: string = e.target.placeholder === "From where" ? 'routeFrom' : 'routeTo';
+
+    setRouteInfo(prevState => ({
+      ...prevState,
+      [currentRouteKey]: e.target.value
+    }))
+  }
+  
+
   return (
     <div className="bg-cyan-100 min-h-48 flex justify-center items-center pt-20 pb-10 mb-20">
       <div className="flex flex-col items-center">
@@ -14,11 +37,15 @@ export function RouteDetermination() {
               type="text"
               className="border-[1px] border-black rounded-l-lg border-right-[1px] border-r-[0px] py-3 px-4 text-lg w-5/12 border-opacity-40"
               placeholder="From where"
+              value={routeFrom}
+              onChange={(e) => handleRouteInfoChange(e)}
             />
             <input
               type="text"
               className="border-[1px] border-black border-right-[1px] py-3 px-4 text-lg w-5/12 border-opacity-40"
               placeholder="To where"
+              value={routeTo}
+              onChange={(e) => handleRouteInfoChange(e)}
             />
             <NavLink
               to="/foundRoute"
