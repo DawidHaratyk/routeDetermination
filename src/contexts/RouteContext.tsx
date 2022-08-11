@@ -1,8 +1,9 @@
-import { createContext } from 'react';
+import { createContext, Dispatch, SetStateAction } from "react";
+import { RouteInfo } from "../types";
 
 interface RouteContextInterface {
-    routeFrom: string;
-    routeTo: string;
+  routeInfo: RouteInfo;
+  setRouteInfo: Dispatch<SetStateAction<RouteInfo>>;
 }
 
-export const RouteContext = createContext<RouteContextInterface | {}>({})
+export const RouteContext = createContext({} as RouteContextInterface);

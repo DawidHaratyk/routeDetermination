@@ -4,7 +4,6 @@ import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { BrowserRouter } from "react-router-dom";
-import { RouteContext } from './contexts/RouteContext';
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
@@ -12,9 +11,7 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
     <BrowserRouter>
-    <RouteContext.Provider value={{ routeFrom: '', routeTo: '' }}>
       <App />
-    </RouteContext.Provider>
     </BrowserRouter>
   </React.StrictMode>
 );

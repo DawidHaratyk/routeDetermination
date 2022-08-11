@@ -1,6 +1,7 @@
 import React from "react";
 import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
+// fix problem with these styles above (warning)
 
 export function ShowRouteAndInfoView() {
   return (
