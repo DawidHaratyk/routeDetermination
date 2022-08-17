@@ -33,6 +33,8 @@ export function ShowRouteAndInfoView() {
           bounds={[
             [routeFrom.position.latitude, routeFrom.position.longitude],
             [routeTo.position.latitude, routeTo.position.longitude],
+            // [51, 71],
+            // [34, 85],
           ]}
           scrollWheelZoom={true}
           style={{ height: "70vh", width: "80vw", marginBottom: "50px" }}
@@ -68,6 +70,19 @@ export function ShowRouteAndInfoView() {
           >
             <Popup>{routeTo.title}</Popup>
           </Marker>
+          {/* <Marker
+            position={[34, 85]}
+            icon={
+              new Icon({
+                iconUrl: markerIconPng,
+                iconSize: [25, 41],
+                iconAnchor: [12, 41],
+              })
+            }
+          >
+            <Popup>{routeTo.title}</Popup>
+          </Marker> */}
+          {/* that marker above will be next marker if user add a next route stop */}
         </MapContainer>
         <div>
           <span className="text-lg">Koszt przejazdu: 155zł</span>

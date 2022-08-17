@@ -34,6 +34,8 @@ export function RouteDetermination() {
       title: "",
     },
   });
+  const [areIntermediateStopsVisible, setAreIntermediateStopsVisible] =
+    useState<boolean>(false);
 
   const navigate = useNavigate();
 
@@ -82,9 +84,9 @@ export function RouteDetermination() {
                 title,
               },
             }))
-          : toast("Wrong from where value entered!");
+          : toast.warn("Wrong from where value entered!");
       })
-      .catch(() => toast("Wrong from where value entered!"));
+      .catch(() => toast.warn("Wrong from where value entered!"));
 
     fetch(routeToAPI)
       .then((response) => response.json())
@@ -102,10 +104,22 @@ export function RouteDetermination() {
                 title,
               },
             }))
-          : toast("Wrong from where value entered!");
+          : toast.warn("Wrong from where value entered!");
       })
-      .catch(() => toast("Wrong from to value entered!"));
+      .catch(() => toast.warn("Wrong from to value entered!"));
+
+    fetch(`https://route.ls.hereapi.com/routing/7.2/calculateroute.xml
+      ?apiKey=rMOBREZMv1w_dZylksrpQ3ONx6ApOyj6yDh7XCeQdds
+      &waypoint0=geo!50.8857,14.81589
+      &waypoint1=geo!50.8681536,14.8308207
+      &routeattributes=wp,sm,sh,sc
+      &mode=fastest;car`)
+      .then((response) => response.json())
+      .then((data) => console.log(data));
   };
+
+  const handleIntermediateStopsVisibility = () =>
+    setAreIntermediateStopsVisible((prevState) => !prevState);
 
   useEffect(() => {
     if (
@@ -124,10 +138,12 @@ export function RouteDetermination() {
         </h4>
         <div className="rounded-lg py-3 px-4 bg-white shadow-lg mb-3">
           <div className="flex">
+            {/* make this input a component */}
             <input
               type="text"
               className="border-[1px] border-black rounded-l-lg border-right-[1px] border-r-[0px] py-3 px-4 text-lg w-5/12 border-opacity-40"
               placeholder="From where"
+              data-route-key="routeFrom"
               value={routeFrom}
               onChange={(e) => handleRouteInfoChange(e)}
             />
@@ -135,6 +151,7 @@ export function RouteDetermination() {
               type="text"
               className="border-[1px] border-black border-right-[1px] py-3 px-4 text-lg w-5/12 border-opacity-40"
               placeholder="To where"
+              data-route-key="routeTo"
               value={routeTo}
               onChange={(e) => handleRouteInfoChange(e)}
             />
@@ -145,10 +162,47 @@ export function RouteDetermination() {
               Search
             </button>
           </div>
+          {areIntermediateStopsVisible && (
+            <div className="flex mt-3">
+              <input
+                type="text"
+                className="border-[1px] border-black rounded-l-lg border-right-[1px] border-r-[0px] py-3 px-4 text-lg w-5/12 border-opacity-40"
+                placeholder="Intermediate stop 1"
+                data-route-key="firstIntermediateStop"
+                value={routeFrom}
+                onChange={(e) => handleRouteInfoChange(e)}
+              />
+              <input
+                type="text"
+                className="border-[1px] border-black rounded-r-lg border-right-[1px] py-3 px-4 text-lg w-5/12 border-opacity-40"
+                placeholder="Intermediate stop 2"
+                data-route-key="secondIntermediateStop"
+                // value={routeTo}
+                // onChange={(e) => handleRouteInfoChange(e)}
+              />
+            </div>
+          )}
         </div>
-        <button className="text-cyan-700 font-bold">Add stop on the way</button>
+        <button
+          className="text-cyan-700 font-bold"
+          onClick={handleIntermediateStopsVisibility}
+        >
+          {areIntermediateStopsVisible
+            ? "Hide intermediate stops"
+            : "Add intermediate stops"}
+        </button>
       </div>
-      <ToastContainer />
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
     </div>
   );
 }

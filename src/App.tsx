@@ -10,6 +10,8 @@ function App() {
   const [routeInfo, setRouteInfo] = useState<RouteInfo>({
     routeFrom: "",
     routeTo: "",
+    firstIntermediateStop: "",
+    secondIntermediateStop: "",
   });
 
   return (
