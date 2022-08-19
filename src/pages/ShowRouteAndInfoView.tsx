@@ -4,30 +4,22 @@ import markerIconPng from "leaflet/dist/images/marker-icon.png";
 import "leaflet/dist/leaflet.css";
 import { Icon } from "leaflet";
 import { useLocation } from "react-router-dom";
+import { FetchedRoute } from "../types";
 // fix problem with these styles above (warning)
-
-interface SingleRoute {
-  position: {
-    latitude: number;
-    longitude: number;
-  };
-  title: string;
-}
-
-interface FetchedRoute {
-  routeFrom: SingleRoute;
-  routeTo: SingleRoute;
-}
 
 export function ShowRouteAndInfoView() {
   const { state } = useLocation();
-  const { routeFrom, routeTo } = state as FetchedRoute;
+  const { routeFrom, routeTo, firstIntermediateStop, secondIntermediateStop } =
+    state as FetchedRoute;
+
+  console.log(state);
 
   return (
     <>
       <div className="flex flex-col items-center text-3xl font-semibold">
         <h2 className="my-6">
-          {routeFrom.title} - {routeTo.title}
+          {routeFrom.title} - {firstIntermediateStop.title} -
+          {secondIntermediateStop.title} - {routeTo.title}
         </h2>
         <MapContainer
           bounds={[

@@ -1,21 +1,10 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { RouteContext } from "../contexts/RouteContext";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer, toast, ToastItem } from "react-toastify";
+import { FetchedRoute } from "../types";
+import { useNotificationCenter } from "react-toastify/addons/use-notification-center";
 import "react-toastify/dist/ReactToastify.css";
-
-interface SingleRoute {
-  position: {
-    latitude: number;
-    longitude: number;
-  };
-  title: string;
-}
-
-interface FetchedRoute {
-  routeFrom: SingleRoute;
-  routeTo: SingleRoute;
-}
 
 export function RouteDetermination() {
   const [fetchedRoute, setFetchedRoute] = useState<FetchedRoute>({
@@ -33,14 +22,31 @@ export function RouteDetermination() {
       },
       title: "",
     },
+    firstIntermediateStop: {
+      position: {
+        latitude: 0,
+        longitude: 0,
+      },
+      title: "",
+    },
+    secondIntermediateStop: {
+      position: {
+        latitude: 0,
+        longitude: 0,
+      },
+      title: "",
+    },
   });
   const [areIntermediateStopsVisible, setAreIntermediateStopsVisible] =
     useState<boolean>(false);
 
+  const { routeInfo, setRouteInfo } = useContext(RouteContext);
+  const { routeFrom, routeTo, firstIntermediateStop, secondIntermediateStop } =
+    routeInfo;
+
   const navigate = useNavigate();
 
-  const { routeInfo, setRouteInfo } = useContext(RouteContext);
-  const { routeFrom, routeTo } = routeInfo;
+  const { notifications, remove } = useNotificationCenter();
 
   const routeFromAPI =
     routeFrom &&
@@ -54,24 +60,50 @@ export function RouteDetermination() {
       routeTo
     )}`;
 
+  const firstIntermediateStopAPI = `https://geocode.search.hereapi.com/v1/geocode?apikey=rMOBREZMv1w_dZylksrpQ3ONx6ApOyj6yDh7XCeQdds&q=${encodeURIComponent(
+    firstIntermediateStop
+  )}`;
+
+  const secondIntermediateStopAPI = `https://geocode.search.hereapi.com/v1/geocode?apikey=rMOBREZMv1w_dZylksrpQ3ONx6ApOyj6yDh7XCeQdds&q=${encodeURIComponent(
+    secondIntermediateStop
+  )}`;
+
   const handleRouteInfoChange = (
     e: React.ChangeEvent<HTMLInputElement>
   ): void => {
-    const currentRouteKey: string =
-      e.target.placeholder === "From where" ? "routeFrom" : "routeTo";
+    const currentRouteKey: string | null =
+      e.target.getAttribute("data-route-key");
 
-    setRouteInfo((prevState) => ({
-      ...prevState,
-      [currentRouteKey]: e.target.value,
-    }));
+    currentRouteKey &&
+      setRouteInfo((prevState) => ({
+        ...prevState,
+        [currentRouteKey]: e.target.value,
+      }));
   };
   // find out if it'll be better to use useCallback above
 
-  const handleNotify = () => {
+  const handleNotify = (): void => {
+    // try to loop over these fetches
+    const customToastId1: string = "toast-id-1";
+    const customToastId2: string = "toast-id-2";
+    const customToastId3: string = "toast-id-3";
+    const customToastId4: string = "toast-id-4";
+
+    const isFetchingFirstIntermediateStop: boolean =
+      areIntermediateStopsVisible && firstIntermediateStop.length
+        ? true
+        : false;
+    const isFetchingSecondIntermediateStop =
+      areIntermediateStopsVisible && secondIntermediateStop.length
+        ? true
+        : false;
+
     fetch(routeFromAPI)
       .then((response) => response.json())
       .then((data) => {
         const { position, title } = data.items[0];
+
+        console.log(title);
 
         data.items.length
           ? setFetchedRoute((prevState) => ({
@@ -84,14 +116,22 @@ export function RouteDetermination() {
                 title,
               },
             }))
-          : toast.warn("Wrong from where value entered!");
+          : toast.warn("Wrong from where value entered!", {
+              toastId: customToastId1,
+            });
       })
-      .catch(() => toast.warn("Wrong from where value entered!"));
+      .catch(() =>
+        toast.warn("Wrong from where value entered!", {
+          toastId: customToastId1,
+        })
+      );
 
     fetch(routeToAPI)
       .then((response) => response.json())
       .then((data) => {
         const { position, title } = data.items[0];
+
+        console.log(title);
 
         data.items.length
           ? setFetchedRoute((prevState) => ({
@@ -104,31 +144,108 @@ export function RouteDetermination() {
                 title,
               },
             }))
-          : toast.warn("Wrong from where value entered!");
+          : toast.warn("Wrong from where value entered!", {
+              toastId: customToastId2,
+            });
       })
-      .catch(() => toast.warn("Wrong from to value entered!"));
+      .catch(() =>
+        toast.warn("Wrong from to value entered!", {
+          toastId: customToastId2,
+        })
+      );
 
-    fetch(`https://route.ls.hereapi.com/routing/7.2/calculateroute.xml
-      ?apiKey=rMOBREZMv1w_dZylksrpQ3ONx6ApOyj6yDh7XCeQdds
-      &waypoint0=geo!50.8857,14.81589
-      &waypoint1=geo!50.8681536,14.8308207
-      &routeattributes=wp,sm,sh,sc
-      &mode=fastest;car`)
-      .then((response) => response.json())
-      .then((data) => console.log(data));
+    isFetchingFirstIntermediateStop &&
+      fetch(firstIntermediateStopAPI)
+        .then((response) => response.json())
+        .then((data) => {
+          const { position, title } = data.items[0];
+
+          console.log(title);
+
+          data.items.length &&
+            setFetchedRoute((prevState) => ({
+              ...prevState,
+              firstIntermediateStop: {
+                position: {
+                  latitude: position.lat,
+                  longitude: position.lng,
+                },
+                title,
+              },
+            }));
+        })
+        .catch(() =>
+          toast.warn("Wrong first intermediate stop value entered!", {
+            toastId: customToastId3,
+          })
+        );
+
+    isFetchingSecondIntermediateStop &&
+      fetch(secondIntermediateStopAPI)
+        .then((response) => response.json())
+        .then((data) => {
+          const { position, title } = data.items[0];
+
+          console.log(title);
+
+          data.items.length &&
+            setFetchedRoute((prevState) => ({
+              ...prevState,
+              secondIntermediateStop: {
+                position: {
+                  latitude: position.lat,
+                  longitude: position.lng,
+                },
+                title,
+              },
+            }));
+        })
+        .catch(() =>
+          toast.warn("Wrong second intermediate stop value entered!", {
+            toastId: customToastId4,
+          })
+        );
+
+    // fetch(`https://route.ls.hereapi.com/routing/7.2/calculateroute.xml
+    //   ?apiKey=rMOBREZMv1w_dZylksrpQ3ONx6ApOyj6yDh7XCeQdds
+    //   &waypoint0=geo!50.8857,14.81589
+    //   &waypoint1=geo!50.8681536,14.8308207
+    //   &routeattributes=wp,sm,sh,sc
+    //   &mode=fastest;car`)
+    //   .then((response) => response.json())
+    //   .then((data) => console.log(data));
   };
 
   const handleIntermediateStopsVisibility = () =>
     setAreIntermediateStopsVisible((prevState) => !prevState);
 
+  // const unsubscribe = toast.onChange((payload: ToastItem) => {
+  //   switch (payload.status) {
+  //     case "added":
+  //       setTimeout(() => {
+  //         remove(payload.id);
+  //       }, 3000);
+  //       break;
+  //   }
+  // });
+
   useEffect(() => {
+    // unsubscribe();
+    console.log(notifications);
+
+    // notifications.forEach((notification) => {
+    //   fetchedRoute.firstIntermediateStop.title
+    // })
+
     if (
       fetchedRoute.routeFrom.title !== "" &&
-      fetchedRoute.routeTo.title !== ""
+      fetchedRoute.routeTo.title !== "" &&
+      !notifications.length
+      // check if there is no notification
     ) {
       navigate("/foundRoute", { state: fetchedRoute });
     }
-  }, [fetchedRoute, navigate]);
+  }, [fetchedRoute, navigate, notifications]);
 
   return (
     <div className="bg-cyan-100 min-h-48 flex justify-center items-center pt-20 pb-10 mb-20">
@@ -169,7 +286,7 @@ export function RouteDetermination() {
                 className="border-[1px] border-black rounded-l-lg border-right-[1px] border-r-[0px] py-3 px-4 text-lg w-5/12 border-opacity-40"
                 placeholder="Intermediate stop 1"
                 data-route-key="firstIntermediateStop"
-                value={routeFrom}
+                value={firstIntermediateStop}
                 onChange={(e) => handleRouteInfoChange(e)}
               />
               <input
@@ -177,8 +294,8 @@ export function RouteDetermination() {
                 className="border-[1px] border-black rounded-r-lg border-right-[1px] py-3 px-4 text-lg w-5/12 border-opacity-40"
                 placeholder="Intermediate stop 2"
                 data-route-key="secondIntermediateStop"
-                // value={routeTo}
-                // onChange={(e) => handleRouteInfoChange(e)}
+                value={secondIntermediateStop}
+                onChange={(e) => handleRouteInfoChange(e)}
               />
             </div>
           )}
@@ -194,7 +311,7 @@ export function RouteDetermination() {
       </div>
       <ToastContainer
         position="top-right"
-        autoClose={3000}
+        autoClose={2000}
         hideProgressBar={false}
         newestOnTop={false}
         closeOnClick
