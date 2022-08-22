@@ -1,18 +1,32 @@
 import React from "react";
-import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
-import markerIconPng from "leaflet/dist/images/marker-icon.png";
+import { MapContainer, TileLayer } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
-import L, { Icon, LatLngBoundsExpression } from "leaflet";
-import { useLocation } from "react-router-dom";
-import { FetchedRoute } from "../types";
+import { LatLngBoundsExpression } from "leaflet";
+import { Location, useLocation } from "react-router-dom";
+import { SingleRoute } from "../types";
 import Routing from "../components/Routing";
 // fix problem with these styles above (warning)
 
 export function ShowRouteAndInfoView() {
-  const { state } = useLocation();
+  const location = useLocation();
 
-  const { routeFrom, routeTo, firstIntermediateStop, secondIntermediateStop } =
-    state as FetchedRoute;
+  const state = location.state as SingleRoute[];
+
+  const [
+    routeFrom,
+    firstIntermediateStop,
+    secondIntermediateStop,
+    routeTo,
+  ]: SingleRoute[] = state;
+
+  let allLocationsInRoute: string = ``;
+
+  for (const [index, place] of state.entries()) {
+    place.title &&
+      (allLocationsInRoute = allLocationsInRoute.concat(
+        `${place.title}${index === 3 ? "" : " - "}`
+      ));
+  }
 
   const bounds: LatLngBoundsExpression = [
     [routeFrom.position.latitude, routeFrom.position.longitude],
@@ -33,9 +47,7 @@ export function ShowRouteAndInfoView() {
   return (
     <>
       <div className="flex flex-col items-center text-lg font-semibold">
-        <h2 className="my-6">
-          {`${routeFrom.title} - ${firstIntermediateStop.title} - ${secondIntermediateStop.title} - ${routeTo.title}`}
-        </h2>
+        <h2 className="my-6">{allLocationsInRoute}</h2>
         <MapContainer
           bounds={bounds}
           scrollWheelZoom={true}

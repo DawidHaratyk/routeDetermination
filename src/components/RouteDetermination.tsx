@@ -2,42 +2,41 @@ import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { RouteContext } from "../contexts/RouteContext";
 import { ToastContainer, toast, ToastItem } from "react-toastify";
-import { FetchedRoute } from "../types";
+import { SingleRoute } from "../types";
 import { useNotificationCenter } from "react-toastify/addons/use-notification-center";
 import "react-toastify/dist/ReactToastify.css";
 
 export function RouteDetermination() {
-  // try to change the fetchedRoute into an array of objects to have less code in ShowRouteAndInfoView component
-  const [fetchedRoute, setFetchedRoute] = useState<FetchedRoute>({
-    routeFrom: {
+  const [fetchedRoute, setFetchedRoute] = useState<SingleRoute[]>([
+    {
       position: {
         latitude: 0,
         longitude: 0,
       },
       title: "",
     },
-    routeTo: {
+    {
       position: {
         latitude: 0,
         longitude: 0,
       },
       title: "",
     },
-    firstIntermediateStop: {
+    {
       position: {
         latitude: 0,
         longitude: 0,
       },
       title: "",
     },
-    secondIntermediateStop: {
+    {
       position: {
         latitude: 0,
         longitude: 0,
       },
       title: "",
     },
-  });
+  ]);
   const [areIntermediateStopsVisible, setAreIntermediateStopsVisible] =
     useState<boolean>(false);
 
@@ -104,34 +103,44 @@ export function RouteDetermination() {
       .then((data) => {
         const { position, title } = data.items[0];
 
-        console.log(title);
+        console.log(position);
 
         data.items.length
-          ? setFetchedRoute((prevState) => ({
-              ...prevState,
-              routeFrom: {
-                position: {
-                  latitude: position.lat,
-                  longitude: position.lng,
-                },
-                title,
-              },
-            }))
+          ? setFetchedRoute((prevState) => {
+              const newFetchedRoute = prevState.map((locationItem, key) => {
+                if (key === 0)
+                  return {
+                    position: {
+                      latitude: position.lat,
+                      longitude: position.lng,
+                    },
+                    title,
+                  };
+                else return locationItem;
+              });
+
+              return newFetchedRoute;
+            })
           : toast.warn("Wrong from where value entered!", {
               toastId: customToastId1,
             });
       })
       .catch(() => {
-        setFetchedRoute((prevState) => ({
-          ...prevState,
-          routeFrom: {
-            position: {
-              latitude: 0,
-              longitude: 0,
-            },
-            title: "",
-          },
-        }));
+        setFetchedRoute((prevState) => {
+          const newFetchedRoute = prevState.map((locationItem, key) => {
+            if (key === 0)
+              return {
+                position: {
+                  latitude: 0,
+                  longitude: 0,
+                },
+                title: "",
+              };
+            else return locationItem;
+          });
+
+          return newFetchedRoute;
+        });
         toast.warn("Wrong from where value entered!", {
           toastId: customToastId1,
         });
@@ -142,34 +151,44 @@ export function RouteDetermination() {
       .then((data) => {
         const { position, title } = data.items[0];
 
-        console.log(title);
+        console.log(position);
 
         data.items.length
-          ? setFetchedRoute((prevState) => ({
-              ...prevState,
-              routeTo: {
-                position: {
-                  latitude: position.lat,
-                  longitude: position.lng,
-                },
-                title,
-              },
-            }))
+          ? setFetchedRoute((prevState) => {
+              const newFetchedRoute = prevState.map((locationItem, key) => {
+                if (key === 3)
+                  return {
+                    position: {
+                      latitude: position.lat,
+                      longitude: position.lng,
+                    },
+                    title,
+                  };
+                else return locationItem;
+              });
+
+              return newFetchedRoute;
+            })
           : toast.warn("Wrong from where value entered!", {
               toastId: customToastId2,
             });
       })
       .catch(() => {
-        setFetchedRoute((prevState) => ({
-          ...prevState,
-          routeTo: {
-            position: {
-              latitude: 0,
-              longitude: 0,
-            },
-            title: "",
-          },
-        }));
+        setFetchedRoute((prevState) => {
+          const newFetchedRoute = prevState.map((locationItem, key) => {
+            if (key === 3)
+              return {
+                position: {
+                  latitude: 0,
+                  longitude: 0,
+                },
+                title: "",
+              };
+            else return locationItem;
+          });
+
+          return newFetchedRoute;
+        });
         toast.warn("Wrong from to value entered!", {
           toastId: customToastId2,
         });
@@ -181,31 +200,41 @@ export function RouteDetermination() {
         .then((data) => {
           const { position, title } = data.items[0];
 
-          console.log(title, data.items.length);
+          console.log(position);
 
           data.items.length &&
-            setFetchedRoute((prevState) => ({
-              ...prevState,
-              firstIntermediateStop: {
-                position: {
-                  latitude: position.lat,
-                  longitude: position.lng,
-                },
-                title,
-              },
-            }));
+            setFetchedRoute((prevState) => {
+              const newFetchedRoute = prevState.map((locationItem, key) => {
+                if (key === 1)
+                  return {
+                    position: {
+                      latitude: position.lat,
+                      longitude: position.lng,
+                    },
+                    title,
+                  };
+                else return locationItem;
+              });
+
+              return newFetchedRoute;
+            });
         })
         .catch(() => {
-          setFetchedRoute((prevState) => ({
-            ...prevState,
-            firstIntermediateStop: {
-              position: {
-                latitude: 0,
-                longitude: 0,
-              },
-              title: "",
-            },
-          }));
+          setFetchedRoute((prevState) => {
+            const newFetchedRoute = prevState.map((locationItem, key) => {
+              if (key === 1)
+                return {
+                  position: {
+                    latitude: 0,
+                    longitude: 0,
+                  },
+                  title: "",
+                };
+              else return locationItem;
+            });
+
+            return newFetchedRoute;
+          });
 
           toast.warn("Wrong first intermediate stop value entered!", {
             toastId: customToastId3,
@@ -218,31 +247,41 @@ export function RouteDetermination() {
         .then((data) => {
           const { position, title } = data.items[0];
 
-          console.log(title);
+          console.log(position);
 
           data.items.length &&
-            setFetchedRoute((prevState) => ({
-              ...prevState,
-              secondIntermediateStop: {
-                position: {
-                  latitude: position.lat,
-                  longitude: position.lng,
-                },
-                title,
-              },
-            }));
+            setFetchedRoute((prevState) => {
+              const newFetchedRoute = prevState.map((locationItem, key) => {
+                if (key === 2)
+                  return {
+                    position: {
+                      latitude: position.lat,
+                      longitude: position.lng,
+                    },
+                    title,
+                  };
+                else return locationItem;
+              });
+
+              return newFetchedRoute;
+            });
         })
         .catch(() => {
-          setFetchedRoute((prevState) => ({
-            ...prevState,
-            secondIntermediateStop: {
-              position: {
-                latitude: 0,
-                longitude: 0,
-              },
-              title: "",
-            },
-          }));
+          setFetchedRoute((prevState) => {
+            const newFetchedRoute = prevState.map((locationItem, key) => {
+              if (key === 2)
+                return {
+                  position: {
+                    latitude: 0,
+                    longitude: 0,
+                  },
+                  title: "",
+                };
+              else return locationItem;
+            });
+
+            return newFetchedRoute;
+          });
 
           toast.warn("Wrong second intermediate stop value entered!", {
             toastId: customToastId4,
@@ -253,11 +292,11 @@ export function RouteDetermination() {
     //   .then((response) => response.json())
     //   .then((data) => console.log(data));
 
-    fetch(
-      `https://router.hereapi.com/v8/routes?transportMode=car&origin=52.5308,13.3847&destination=52.5264,13.3686&return=summary&apikey=rMOBREZMv1w_dZylksrpQ3ONx6ApOyj6yDh7XCeQdds`
-    )
-      .then((response) => response.json())
-      .then((data) => console.log(data));
+    //   fetch(
+    //     `https://router.hereapi.com/v8/routes?transportMode=car&origin=52.5308,13.3847&destination=52.5264,13.3686&return=summary&apikey=rMOBREZMv1w_dZylksrpQ3ONx6ApOyj6yDh7XCeQdds`
+    //   )
+    //     .then((response) => response.json())
+    //     .then((data) => console.log(data));
   };
 
   const handleIntermediateStopsVisibility = (): void =>
@@ -272,20 +311,14 @@ export function RouteDetermination() {
   });
 
   useEffect(() => {
-    console.log(fetchedRoute);
-
     unsubscribe();
 
     if (
-      fetchedRoute.routeFrom.title !== "" &&
-      fetchedRoute.routeTo.title !== "" &&
+      fetchedRoute[0].title !== "" &&
+      fetchedRoute[3].title !== "" &&
       !notifications.length &&
-      (firstIntermediateStop
-        ? Boolean(fetchedRoute.firstIntermediateStop.title)
-        : true) &&
-      (secondIntermediateStop
-        ? Boolean(fetchedRoute.secondIntermediateStop.title)
-        : true)
+      (firstIntermediateStop ? Boolean(fetchedRoute[1].title) : true) &&
+      (secondIntermediateStop ? Boolean(fetchedRoute[2].title) : true)
     ) {
       navigate("/foundRoute", { state: fetchedRoute });
     }
