@@ -2,32 +2,42 @@ import React from "react";
 import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
 import markerIconPng from "leaflet/dist/images/marker-icon.png";
 import "leaflet/dist/leaflet.css";
-import { Icon } from "leaflet";
+import L, { Icon, LatLngBoundsExpression } from "leaflet";
 import { useLocation } from "react-router-dom";
 import { FetchedRoute } from "../types";
+import Routing from "../components/Routing";
 // fix problem with these styles above (warning)
 
 export function ShowRouteAndInfoView() {
   const { state } = useLocation();
+
   const { routeFrom, routeTo, firstIntermediateStop, secondIntermediateStop } =
     state as FetchedRoute;
 
-  console.log(state);
+  const bounds: LatLngBoundsExpression = [
+    [routeFrom.position.latitude, routeFrom.position.longitude],
+    [routeTo.position.latitude, routeTo.position.longitude],
+  ];
+
+  firstIntermediateStop.title &&
+    bounds.push([
+      firstIntermediateStop.position.latitude,
+      firstIntermediateStop.position.longitude,
+    ]);
+  secondIntermediateStop.title &&
+    bounds.push([
+      secondIntermediateStop.position.latitude,
+      secondIntermediateStop.position.longitude,
+    ]);
 
   return (
     <>
-      <div className="flex flex-col items-center text-3xl font-semibold">
+      <div className="flex flex-col items-center text-lg font-semibold">
         <h2 className="my-6">
-          {routeFrom.title} - {firstIntermediateStop.title} -
-          {secondIntermediateStop.title} - {routeTo.title}
+          {`${routeFrom.title} - ${firstIntermediateStop.title} - ${secondIntermediateStop.title} - ${routeTo.title}`}
         </h2>
         <MapContainer
-          bounds={[
-            [routeFrom.position.latitude, routeFrom.position.longitude],
-            [routeTo.position.latitude, routeTo.position.longitude],
-            // [51, 71],
-            // [34, 85],
-          ]}
+          bounds={bounds}
           scrollWheelZoom={true}
           style={{ height: "70vh", width: "80vw", marginBottom: "50px" }}
         >
@@ -35,7 +45,7 @@ export function ShowRouteAndInfoView() {
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           />
-          <Marker
+          {/* <Marker
             position={[
               routeFrom.position.latitude,
               routeFrom.position.longitude,
@@ -62,22 +72,44 @@ export function ShowRouteAndInfoView() {
           >
             <Popup>{routeTo.title}</Popup>
           </Marker>
-          {/* <Marker
-            position={[34, 85]}
-            icon={
-              new Icon({
-                iconUrl: markerIconPng,
-                iconSize: [25, 41],
-                iconAnchor: [12, 41],
-              })
-            }
-          >
-            <Popup>{routeTo.title}</Popup>
-          </Marker> */}
-          {/* that marker above will be next marker if user add a next route stop */}
+          {firstIntermediateStop && (
+            <Marker
+              position={[
+                firstIntermediateStop.position.latitude,
+                firstIntermediateStop.position.longitude,
+              ]}
+              icon={
+                new Icon({
+                  iconUrl: markerIconPng,
+                  iconSize: [25, 41],
+                  iconAnchor: [12, 41],
+                })
+              }
+            >
+              <Popup>{routeTo.title}</Popup>
+            </Marker>
+          )}
+          {secondIntermediateStop && (
+            <Marker
+              position={[
+                secondIntermediateStop.position.latitude,
+                secondIntermediateStop.position.longitude,
+              ]}
+              icon={
+                new Icon({
+                  iconUrl: markerIconPng,
+                  iconSize: [25, 41],
+                  iconAnchor: [12, 41],
+                })
+              }
+            >
+              <Popup>{routeTo.title}</Popup>
+            </Marker>
+          )} */}
+          <Routing bounds={bounds} />
         </MapContainer>
         <div>
-          <span className="text-lg">Koszt przejazdu: 155zł</span>
+          <span>Koszt przejazdu: 155zł</span>
         </div>
       </div>
     </>

@@ -7,6 +7,7 @@ import { useNotificationCenter } from "react-toastify/addons/use-notification-ce
 import "react-toastify/dist/ReactToastify.css";
 
 export function RouteDetermination() {
+  // try to change the fetchedRoute into an array of objects to have less code in ShowRouteAndInfoView component
   const [fetchedRoute, setFetchedRoute] = useState<FetchedRoute>({
     routeFrom: {
       position: {
@@ -120,11 +121,21 @@ export function RouteDetermination() {
               toastId: customToastId1,
             });
       })
-      .catch(() =>
+      .catch(() => {
+        setFetchedRoute((prevState) => ({
+          ...prevState,
+          routeFrom: {
+            position: {
+              latitude: 0,
+              longitude: 0,
+            },
+            title: "",
+          },
+        }));
         toast.warn("Wrong from where value entered!", {
           toastId: customToastId1,
-        })
-      );
+        });
+      });
 
     fetch(routeToAPI)
       .then((response) => response.json())
@@ -148,11 +159,21 @@ export function RouteDetermination() {
               toastId: customToastId2,
             });
       })
-      .catch(() =>
+      .catch(() => {
+        setFetchedRoute((prevState) => ({
+          ...prevState,
+          routeTo: {
+            position: {
+              latitude: 0,
+              longitude: 0,
+            },
+            title: "",
+          },
+        }));
         toast.warn("Wrong from to value entered!", {
           toastId: customToastId2,
-        })
-      );
+        });
+      });
 
     isFetchingFirstIntermediateStop &&
       fetch(firstIntermediateStopAPI)
@@ -160,7 +181,7 @@ export function RouteDetermination() {
         .then((data) => {
           const { position, title } = data.items[0];
 
-          console.log(title);
+          console.log(title, data.items.length);
 
           data.items.length &&
             setFetchedRoute((prevState) => ({
@@ -174,11 +195,22 @@ export function RouteDetermination() {
               },
             }));
         })
-        .catch(() =>
+        .catch(() => {
+          setFetchedRoute((prevState) => ({
+            ...prevState,
+            firstIntermediateStop: {
+              position: {
+                latitude: 0,
+                longitude: 0,
+              },
+              title: "",
+            },
+          }));
+
           toast.warn("Wrong first intermediate stop value entered!", {
             toastId: customToastId3,
-          })
-        );
+          });
+        });
 
     isFetchingSecondIntermediateStop &&
       fetch(secondIntermediateStopAPI)
@@ -200,48 +232,60 @@ export function RouteDetermination() {
               },
             }));
         })
-        .catch(() =>
+        .catch(() => {
+          setFetchedRoute((prevState) => ({
+            ...prevState,
+            secondIntermediateStop: {
+              position: {
+                latitude: 0,
+                longitude: 0,
+              },
+              title: "",
+            },
+          }));
+
           toast.warn("Wrong second intermediate stop value entered!", {
             toastId: customToastId4,
-          })
-        );
+          });
+        });
 
-    // fetch(`https://route.ls.hereapi.com/routing/7.2/calculateroute.xml
-    //   ?apiKey=rMOBREZMv1w_dZylksrpQ3ONx6ApOyj6yDh7XCeQdds
-    //   &waypoint0=geo!50.8857,14.81589
-    //   &waypoint1=geo!50.8681536,14.8308207
-    //   &routeattributes=wp,sm,sh,sc
-    //   &mode=fastest;car`)
+    // fetch("https://tourplanning.hereapi.com/v3/problems")
     //   .then((response) => response.json())
     //   .then((data) => console.log(data));
+
+    fetch(
+      `https://router.hereapi.com/v8/routes?transportMode=car&origin=52.5308,13.3847&destination=52.5264,13.3686&return=summary&apikey=rMOBREZMv1w_dZylksrpQ3ONx6ApOyj6yDh7XCeQdds`
+    )
+      .then((response) => response.json())
+      .then((data) => console.log(data));
   };
 
-  const handleIntermediateStopsVisibility = () =>
+  const handleIntermediateStopsVisibility = (): void =>
     setAreIntermediateStopsVisible((prevState) => !prevState);
 
-  // const unsubscribe = toast.onChange((payload: ToastItem) => {
-  //   switch (payload.status) {
-  //     case "added":
-  //       setTimeout(() => {
-  //         remove(payload.id);
-  //       }, 3000);
-  //       break;
-  //   }
-  // });
+  const unsubscribe = toast.onChange((payload: ToastItem) => {
+    if (payload.status === "added") {
+      setTimeout(() => {
+        remove(payload.id);
+      }, 3000);
+    }
+  });
 
   useEffect(() => {
-    // unsubscribe();
-    console.log(notifications);
+    console.log(fetchedRoute);
 
-    // notifications.forEach((notification) => {
-    //   fetchedRoute.firstIntermediateStop.title
-    // })
+    unsubscribe();
 
     if (
       fetchedRoute.routeFrom.title !== "" &&
       fetchedRoute.routeTo.title !== "" &&
-      !notifications.length
-      // check if there is no notification
+      !notifications.length &&
+      (firstIntermediateStop
+        ? Boolean(fetchedRoute.firstIntermediateStop.title)
+        : true) &&
+      (secondIntermediateStop
+        ? Boolean(fetchedRoute.secondIntermediateStop.title)
+        : true)
     ) {
       navigate("/foundRoute", { state: fetchedRoute });
     }
