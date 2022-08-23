@@ -1,10 +1,11 @@
 import React, { useContext, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { NavigateFunction, useNavigate } from "react-router-dom";
 import { RouteContext } from "../contexts/RouteContext";
 import { ToastContainer, toast, ToastItem } from "react-toastify";
 import { SingleRoute } from "../types";
 import { useNotificationCenter } from "react-toastify/addons/use-notification-center";
 import "react-toastify/dist/ReactToastify.css";
+import { allLocations, API } from "../constants";
 
 export function RouteDetermination() {
   const [fetchedRoute, setFetchedRoute] = useState<SingleRoute[]>([
@@ -44,29 +45,48 @@ export function RouteDetermination() {
   const { routeFrom, routeTo, firstIntermediateStop, secondIntermediateStop } =
     routeInfo;
 
-  const navigate = useNavigate();
+  const navigate: NavigateFunction = useNavigate();
 
-  const { notifications, remove } = useNotificationCenter();
+  const { notifications, remove } = useNotificationCenter<{}>();
 
-  const routeFromAPI =
-    routeFrom &&
-    `https://geocode.search.hereapi.com/v1/geocode?apikey=rMOBREZMv1w_dZylksrpQ3ONx6ApOyj6yDh7XCeQdds&q=${encodeURIComponent(
-      routeFrom
-    )}`;
+  const apiUrlList = allLocations.map((apiLocation) => {
+    // creating array of all api url's
+    if (apiLocation === "routeFrom")
+      return routeFrom && `${API}${encodeURIComponent(routeFrom)}`;
+    if (apiLocation === "routeTo")
+      return routeTo && `${API}${encodeURIComponent(routeTo)}`;
+    if (apiLocation === "firstIntermediateStop")
+      return `${API}${encodeURIComponent(firstIntermediateStop)}`;
+    if (apiLocation === "secondIntermediateStop")
+      return `${API}${encodeURIComponent(secondIntermediateStop)}`;
+  });
 
-  const routeToAPI =
-    routeTo &&
-    `https://geocode.search.hereapi.com/v1/geocode?apikey=rMOBREZMv1w_dZylksrpQ3ONx6ApOyj6yDh7XCeQdds&q=${encodeURIComponent(
-      routeTo
-    )}`;
+  const [
+    routeFromAPI,
+    routeToAPI,
+    firstIntermediateStopAPI,
+    secondIntermediateStopAPI,
+  ] = apiUrlList as string[];
 
-  const firstIntermediateStopAPI = `https://geocode.search.hereapi.com/v1/geocode?apikey=rMOBREZMv1w_dZylksrpQ3ONx6ApOyj6yDh7XCeQdds&q=${encodeURIComponent(
-    firstIntermediateStop
-  )}`;
+  // const routeFromAPI =
+  //   routeFrom &&
+  //   `https://geocode.search.hereapi.com/v1/geocode?apikey=rMOBREZMv1w_dZylksrpQ3ONx6ApOyj6yDh7XCeQdds&q=${encodeURIComponent(
+  //     routeFrom
+  //   )}`;
 
-  const secondIntermediateStopAPI = `https://geocode.search.hereapi.com/v1/geocode?apikey=rMOBREZMv1w_dZylksrpQ3ONx6ApOyj6yDh7XCeQdds&q=${encodeURIComponent(
-    secondIntermediateStop
-  )}`;
+  // const routeToAPI =
+  //   routeTo &&
+  //   `https://geocode.search.hereapi.com/v1/geocode?apikey=rMOBREZMv1w_dZylksrpQ3ONx6ApOyj6yDh7XCeQdds&q=${encodeURIComponent(
+  //     routeTo
+  //   )}`;
+
+  // const firstIntermediateStopAPI = `https://geocode.search.hereapi.com/v1/geocode?apikey=rMOBREZMv1w_dZylksrpQ3ONx6ApOyj6yDh7XCeQdds&q=${encodeURIComponent(
+  //   firstIntermediateStop
+  // )}`;
+
+  // const secondIntermediateStopAPI = `https://geocode.search.hereapi.com/v1/geocode?apikey=rMOBREZMv1w_dZylksrpQ3ONx6ApOyj6yDh7XCeQdds&q=${encodeURIComponent(
+  //   secondIntermediateStop
+  // )}`;
 
   const handleRouteInfoChange = (
     e: React.ChangeEvent<HTMLInputElement>
@@ -83,12 +103,6 @@ export function RouteDetermination() {
   // find out if it'll be better to use useCallback above
 
   const handleNotify = (): void => {
-    // try to loop over these fetches
-    const customToastId1: string = "toast-id-1";
-    const customToastId2: string = "toast-id-2";
-    const customToastId3: string = "toast-id-3";
-    const customToastId4: string = "toast-id-4";
-
     const isFetchingFirstIntermediateStop: boolean =
       areIntermediateStopsVisible && firstIntermediateStop.length
         ? true
@@ -98,12 +112,33 @@ export function RouteDetermination() {
         ? true
         : false;
 
+    // const api1 = axios.get(routeFromAPI);
+    // const api2 = axios.get(routeToAPI);
+    // const api3 = axios.get(firstIntermediateStopAPI);
+    // const api4 = axios.get(secondIntermediateStopAPI);
+
+    // axios.all([api1, api2, api3, api4]).then(
+    //   axios.spread((...allData) => {
+    //     const data1 = allData[0].data.items[0];
+    //     const data2 = allData[1].data.items[0];
+    //     const data3 =
+    //       isFetchingFirstIntermediateStop && allData[2].data.items[0];
+    //     const data4 =
+    //       isFetchingSecondIntermediateStop && allData[3].data.items[0];
+    //     console.log(data1, data2, data3, data4);
+    //   })
+    // );
+
+    const customToastId1: string = "toast-id-1";
+    const customToastId2: string = "toast-id-2";
+    const customToastId3: string = "toast-id-3";
+    const customToastId4: string = "toast-id-4";
+
+    // can i loop over these fetches somehow? is it worth?
     fetch(routeFromAPI)
       .then((response) => response.json())
       .then((data) => {
         const { position, title } = data.items[0];
-
-        console.log(position);
 
         data.items.length
           ? setFetchedRoute((prevState) => {
@@ -150,8 +185,6 @@ export function RouteDetermination() {
       .then((response) => response.json())
       .then((data) => {
         const { position, title } = data.items[0];
-
-        console.log(position);
 
         data.items.length
           ? setFetchedRoute((prevState) => {
@@ -200,8 +233,6 @@ export function RouteDetermination() {
         .then((data) => {
           const { position, title } = data.items[0];
 
-          console.log(position);
-
           data.items.length &&
             setFetchedRoute((prevState) => {
               const newFetchedRoute = prevState.map((locationItem, key) => {
@@ -247,8 +278,6 @@ export function RouteDetermination() {
         .then((data) => {
           const { position, title } = data.items[0];
 
-          console.log(position);
-
           data.items.length &&
             setFetchedRoute((prevState) => {
               const newFetchedRoute = prevState.map((locationItem, key) => {
@@ -292,26 +321,51 @@ export function RouteDetermination() {
     //   .then((response) => response.json())
     //   .then((data) => console.log(data));
 
-    //   fetch(
-    //     `https://router.hereapi.com/v8/routes?transportMode=car&origin=52.5308,13.3847&destination=52.5264,13.3686&return=summary&apikey=rMOBREZMv1w_dZylksrpQ3ONx6ApOyj6yDh7XCeQdds`
-    //   )
-    //     .then((response) => response.json())
-    //     .then((data) => console.log(data));
+    // fetch(
+    //   `https://router.hereapi.com/v8/routes?transportMode=car&origin=52.5308,13.3847&destination=52.5264,13.3686&return=summary&apikey=rMOBREZMv1w_dZylksrpQ3ONx6ApOyj6yDh7XCeQdds`
+    // )
+    //   .then((response) => response.json())
+    //   .then((data) => console.log(data));
   };
 
-  const handleIntermediateStopsVisibility = (): void =>
-    setAreIntermediateStopsVisible((prevState) => !prevState);
+  const handleIntermediateStopsVisibility = (): void => {
+    setFetchedRoute((prevState) => {
+      const newFetchedRoute = prevState.map((locationItem, key) => {
+        if (key === 1 || key === 2) {
+          return {
+            position: {
+              latitude: 0,
+              longitude: 0,
+            },
+            title: "",
+          };
+        } else return locationItem;
+      });
 
-  const unsubscribe = toast.onChange((payload: ToastItem) => {
-    if (payload.status === "added") {
-      setTimeout(() => {
-        remove(payload.id);
-      }, 3000);
+      return newFetchedRoute;
+    });
+
+    setRouteInfo((prevState) => ({
+      ...prevState,
+      firstIntermediateStop: "",
+      secondIntermediateStop: "",
+    }));
+
+    setAreIntermediateStopsVisible((prevState) => !prevState);
+  };
+
+  const removeNotificationFromNotificationCenter = toast.onChange(
+    (payload: ToastItem): void => {
+      if (payload.status === "added") {
+        setTimeout<[]>(() => {
+          remove(payload.id);
+        }, 3000);
+      }
     }
-  });
+  );
 
   useEffect(() => {
-    unsubscribe();
+    removeNotificationFromNotificationCenter();
 
     if (
       fetchedRoute[0].title !== "" &&
@@ -332,7 +386,6 @@ export function RouteDetermination() {
         </h4>
         <div className="rounded-lg py-3 px-4 bg-white shadow-lg mb-3">
           <div className="flex">
-            {/* make this input a component */}
             <input
               type="text"
               className="border-[1px] border-black rounded-l-lg border-right-[1px] border-r-[0px] py-3 px-4 text-lg w-5/12 border-opacity-40"

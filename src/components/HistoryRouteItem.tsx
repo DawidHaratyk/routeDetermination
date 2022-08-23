@@ -1,4 +1,5 @@
 import React from "react";
+import { RouteDetail } from "./RouteDetail";
 
 export function HistoryRouteItem() {
   return (
@@ -11,18 +12,17 @@ export function HistoryRouteItem() {
       <div className="py-4 px-10">
         <h6 className="font-bold">Wisła - Ustroń</h6>
         <div>
-          <span className="text-xs inline-block w-60">
-            Odległość drogowa:
-            <span className="font-semibold"> 18.19 km</span>
-          </span>
-          <span className="text-xs inline-block w-60">
-            Czas przejazdu:
-            <span className="font-semibold"> 0 h 18 min</span>
-          </span>
-          <span className="text-xs">
-            Koszt przejazdu:
-            <span className="font-semibold"> 156zł</span>
-          </span>
+          <RouteDetail
+            containerClasses="text-xs inline-block w-60"
+            detailName="Odległość drogowa:"
+            detailValue=" 18.19 km"
+          />
+          <RouteDetail
+            containerClasses="text-xs inline-block w-60"
+            detailName="Czas przejazdu:"
+            detailValue=" 0 h 18 min"
+          />
+          <RouteDetail detailName="Koszt przejazdu:" detailValue=" 156zł" />
         </div>
       </div>
     </div>
