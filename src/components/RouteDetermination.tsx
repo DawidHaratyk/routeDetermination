@@ -42,8 +42,13 @@ export function RouteDetermination() {
     useState<boolean>(false);
 
   const { routeInfo, setRouteInfo } = useContext(RouteContext);
-  const { routeFrom, routeTo, firstIntermediateStop, secondIntermediateStop } =
-    routeInfo;
+  const {
+    routeFrom,
+    routeTo,
+    firstIntermediateStop,
+    secondIntermediateStop,
+    ratePerKilometer,
+  } = routeInfo;
 
   const navigate: NavigateFunction = useNavigate();
 
@@ -316,40 +321,30 @@ export function RouteDetermination() {
             toastId: customToastId4,
           });
         });
-
-    // fetch("https://tourplanning.hereapi.com/v3/problems")
-    //   .then((response) => response.json())
-    //   .then((data) => console.log(data));
-
-    // fetch(
-    //   `https://router.hereapi.com/v8/routes?transportMode=car&origin=52.5308,13.3847&destination=52.5264,13.3686&return=summary&apikey=rMOBREZMv1w_dZylksrpQ3ONx6ApOyj6yDh7XCeQdds`
-    // )
-    //   .then((response) => response.json())
-    //   .then((data) => console.log(data));
   };
 
   const handleIntermediateStopsVisibility = (): void => {
-    setFetchedRoute((prevState) => {
-      const newFetchedRoute = prevState.map((locationItem, key) => {
-        if (key === 1 || key === 2) {
-          return {
-            position: {
-              latitude: 0,
-              longitude: 0,
-            },
-            title: "",
-          };
-        } else return locationItem;
-      });
+    // setFetchedRoute((prevState) => {
+    //   const newFetchedRoute = prevState.map((locationItem, key) => {
+    //     if (key === 1 || key === 2) {
+    //       return {
+    //         position: {
+    //           latitude: 0,
+    //           longitude: 0,
+    //         },
+    //         title: "",
+    //       };
+    //     } else return locationItem;
+    //   });
 
-      return newFetchedRoute;
-    });
+    //   return newFetchedRoute;
+    // });
 
-    setRouteInfo((prevState) => ({
-      ...prevState,
-      firstIntermediateStop: "",
-      secondIntermediateStop: "",
-    }));
+    // setRouteInfo((prevState) => ({
+    //   ...prevState,
+    //   firstIntermediateStop: "",
+    //   secondIntermediateStop: "",
+    // }));
 
     setAreIntermediateStopsVisible((prevState) => !prevState);
   };
@@ -365,6 +360,8 @@ export function RouteDetermination() {
   );
 
   useEffect(() => {
+    console.log(fetchedRoute);
+
     removeNotificationFromNotificationCenter();
 
     if (
@@ -384,7 +381,17 @@ export function RouteDetermination() {
         <h4 className="text-3xl font-bold mb-6 text-center">
           Where do you want to travel today?
         </h4>
-        <div className="rounded-lg py-3 px-4 bg-white shadow-lg mb-3">
+        <div className="flex justify-center items-center">
+          <span className="text-lg font-semibold">Rate per kilometer: </span>
+          <input
+            type="number"
+            className="border-[1px] border-black rounded py-1 px-4 text-lg w-1/4 border-opacity-40 ml-4"
+            data-route-key="ratePerKilometer"
+            value={ratePerKilometer}
+            onChange={(e) => handleRouteInfoChange(e)}
+          />
+        </div>
+        <div className="rounded-lg py-3 px-4 bg-white shadow-lg my-3">
           <div className="flex">
             <input
               type="text"
@@ -431,7 +438,7 @@ export function RouteDetermination() {
           )}
         </div>
         <button
-          className="text-cyan-700 font-bold"
+          className="text-cyan-700 font-bold mb-3"
           onClick={handleIntermediateStopsVisibility}
         >
           {areIntermediateStopsVisible

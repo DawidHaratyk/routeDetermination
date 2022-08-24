@@ -3,4 +3,5 @@ export interface RouteInfo {
   routeTo: string;
   firstIntermediateStop: string;
   secondIntermediateStop: string;
+  ratePerKilometer: number;
 }

@@ -13,6 +13,8 @@ export default function Routing({ bounds }) {
 
   const map = useMap();
 
+  console.log(map);
+
   useEffect(() => {
     if (!map) return;
 

@@ -4,7 +4,7 @@ import { NotFound } from "./components/NotFound";
 import { RouteContext } from "./contexts/RouteContext";
 import RouteDeterminationView from "./pages/RouteDeterminationView";
 import { ShowRouteAndInfoView } from "./pages/ShowRouteAndInfoView";
-import { RouteInfo } from "./types";
+import { HistoryRoute, RouteInfo } from "./types";
 
 function App() {
   const [routeInfo, setRouteInfo] = useState<RouteInfo>({
@@ -12,11 +12,30 @@ function App() {
     routeTo: "",
     firstIntermediateStop: "",
     secondIntermediateStop: "",
+    ratePerKilometer: 7,
   });
+
+  const [routesHistoryList, setRoutesHistoryList] = useState<
+    HistoryRoute[] | []
+  >([
+    {
+      name: "London - Karaiby",
+      distance: "15536km",
+      duration: "2h",
+      cost: "800zł",
+    },
+  ]);
 
   return (
     <>
-      <RouteContext.Provider value={{ routeInfo, setRouteInfo }}>
+      <RouteContext.Provider
+        value={{
+          routeInfo,
+          setRouteInfo,
+          routesHistoryList,
+          setRoutesHistoryList,
+        }}
+      >
         <Routes>
           <Route path="/">
             <Route index element={<RouteDeterminationView />} />
