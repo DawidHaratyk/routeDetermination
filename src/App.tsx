@@ -12,7 +12,7 @@ function App() {
     routeTo: "",
     firstIntermediateStop: "",
     secondIntermediateStop: "",
-    ratePerKilometer: 7,
+    ratePerKilometer: 0.5,
   });
 
   const [routesHistoryList, setRoutesHistoryList] = useState<

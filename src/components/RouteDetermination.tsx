@@ -117,23 +117,6 @@ export function RouteDetermination() {
         ? true
         : false;
 
-    // const api1 = axios.get(routeFromAPI);
-    // const api2 = axios.get(routeToAPI);
-    // const api3 = axios.get(firstIntermediateStopAPI);
-    // const api4 = axios.get(secondIntermediateStopAPI);
-
-    // axios.all([api1, api2, api3, api4]).then(
-    //   axios.spread((...allData) => {
-    //     const data1 = allData[0].data.items[0];
-    //     const data2 = allData[1].data.items[0];
-    //     const data3 =
-    //       isFetchingFirstIntermediateStop && allData[2].data.items[0];
-    //     const data4 =
-    //       isFetchingSecondIntermediateStop && allData[3].data.items[0];
-    //     console.log(data1, data2, data3, data4);
-    //   })
-    // );
-
     const customToastId1: string = "toast-id-1";
     const customToastId2: string = "toast-id-2";
     const customToastId3: string = "toast-id-3";
@@ -324,27 +307,27 @@ export function RouteDetermination() {
   };
 
   const handleIntermediateStopsVisibility = (): void => {
-    // setFetchedRoute((prevState) => {
-    //   const newFetchedRoute = prevState.map((locationItem, key) => {
-    //     if (key === 1 || key === 2) {
-    //       return {
-    //         position: {
-    //           latitude: 0,
-    //           longitude: 0,
-    //         },
-    //         title: "",
-    //       };
-    //     } else return locationItem;
-    //   });
+    setFetchedRoute((prevState) => {
+      const newFetchedRoute = prevState.map((locationItem, key) => {
+        if (key === 1 || key === 2) {
+          return {
+            position: {
+              latitude: 0,
+              longitude: 0,
+            },
+            title: "",
+          };
+        } else return locationItem;
+      });
 
-    //   return newFetchedRoute;
-    // });
+      return newFetchedRoute;
+    });
 
-    // setRouteInfo((prevState) => ({
-    //   ...prevState,
-    //   firstIntermediateStop: "",
-    //   secondIntermediateStop: "",
-    // }));
+    setRouteInfo((prevState) => ({
+      ...prevState,
+      firstIntermediateStop: "",
+      secondIntermediateStop: "",
+    }));
 
     setAreIntermediateStopsVisible((prevState) => !prevState);
   };
@@ -360,8 +343,6 @@ export function RouteDetermination() {
   );
 
   useEffect(() => {
-    console.log(fetchedRoute);
-
     removeNotificationFromNotificationCenter();
 
     if (
@@ -374,6 +355,18 @@ export function RouteDetermination() {
       navigate("/foundRoute", { state: fetchedRoute });
     }
   }, [fetchedRoute, navigate, notifications]);
+
+  useEffect(() => {
+    console.log(routeInfo);
+
+    setRouteInfo((prevState) => ({
+      ...prevState,
+      routeFrom: "",
+      routeTo: "",
+      firstIntermediateStop: "",
+      secondIntermediateStop: "",
+    }));
+  }, []);
 
   return (
     <div className="bg-cyan-100 min-h-48 flex justify-center items-center pt-20 pb-10 mb-20">
