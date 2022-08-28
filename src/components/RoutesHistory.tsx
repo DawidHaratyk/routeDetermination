@@ -6,16 +6,14 @@ export function RoutesHistory() {
   const { routesHistoryList } = useContext(RouteContext);
 
   const currentRoutesHistoryList = routesHistoryList.map(
-    (historyRoute, key) => {
-      console.log(historyRoute);
-
-      return <HistoryRouteItem historyRoute={historyRoute} index={key} />;
-    }
+    (historyRoute, key) => (
+      <HistoryRouteItem historyRoute={historyRoute} index={key} />
+    )
   );
 
-  useEffect(() => {
-    console.log(currentRoutesHistoryList);
-  }, []);
+  // useEffect(() => {
+  //   console.log(currentRoutesHistoryList);
+  // }, []);
 
   return (
     <div>

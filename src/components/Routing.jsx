@@ -8,12 +8,13 @@ L.Marker.prototype.options.icon = L.icon({
   iconUrl: "https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png",
 });
 
-export default function Routing({ bounds }) {
-  const currentBounds = bounds.map((bound) => L.latLng(bound[0], bound[1]));
+export default function Routing({ routingBounds }) {
+  const currentBounds = routingBounds.map((bound) =>
+    L.latLng(bound[0], bound[1])
+  );
+  // make the marker not draggable
 
   const map = useMap();
-
-  console.log(map);
 
   useEffect(() => {
     if (!map) return;
