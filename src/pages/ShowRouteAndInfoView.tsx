@@ -11,6 +11,7 @@ import {
 import { SingleRoute } from "../types";
 import Routing from "../components/Routing";
 import { RouteContext } from "../contexts/RouteContext";
+import { HistoryRouteItem } from "../components/HistoryRouteItem";
 // fix problem with these styles above (warning)
 
 export function ShowRouteAndInfoView() {
@@ -145,8 +146,19 @@ export function ShowRouteAndInfoView() {
           <Routing routingBounds={routingBounds} />
         </MapContainer>
         <div>
-          {/* // pdf */}
-          <div>
+          <HistoryRouteItem
+            historyRoute={{
+              name: allLocationsInRoute,
+              distance:
+                routesHistoryList[routesHistoryList.length - 1].distance,
+              duration:
+                routesHistoryList[routesHistoryList.length - 1].duration,
+              cost: routesHistoryList[routesHistoryList.length - 1].cost,
+            }}
+            index={0}
+            classNames="w-full"
+          />
+          {/* <div>
             Koszt przejazdu:
             {routesHistoryList[routesHistoryList.length - 1].cost}
           </div>
@@ -157,7 +169,7 @@ export function ShowRouteAndInfoView() {
           <div>
             Odległość przejazdu:
             {routesHistoryList[routesHistoryList.length - 1].distance}
-          </div>
+          </div> */}
         </div>
       </div>
     </>

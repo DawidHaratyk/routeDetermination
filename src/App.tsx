@@ -5,6 +5,7 @@ import { RouteContext } from "./contexts/RouteContext";
 import RouteDeterminationView from "./pages/RouteDeterminationView";
 import { ShowRouteAndInfoView } from "./pages/ShowRouteAndInfoView";
 import { HistoryRoute, RouteInfo } from "./types";
+import { BrowserRouter } from "react-router-dom";
 
 function App() {
   const [routeInfo, setRouteInfo] = useState<RouteInfo>({
@@ -27,7 +28,7 @@ function App() {
   ]);
 
   return (
-    <>
+    <BrowserRouter>
       <RouteContext.Provider
         value={{
           routeInfo,
@@ -44,7 +45,7 @@ function App() {
           </Route>
         </Routes>
       </RouteContext.Provider>
-    </>
+    </BrowserRouter>
   );
 }
 
