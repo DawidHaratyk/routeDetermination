@@ -14,7 +14,7 @@ export function RouteDetail({
   return (
     <span className={containerClasses}>
       {detailName}
-      <span className="font-semibold"> {detailValue}</span>
+      <span className="font-bold"> {detailValue}</span>
     </span>
   );
 }

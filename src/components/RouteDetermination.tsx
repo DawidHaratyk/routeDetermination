@@ -371,7 +371,7 @@ export function RouteDetermination() {
   return (
     <div className="bg-cyan-100 min-h-48 flex justify-center items-center pt-20 pb-10 mb-20">
       <div className="flex flex-col items-center">
-        <h4 className="text-3xl font-bold mb-6 text-center">
+        <h4 className="text-2xl sm:text-3xl font-bold mb-6 text-center">
           Where do you want to travel today?
         </h4>
         <div className="flex justify-center items-center">
@@ -384,11 +384,11 @@ export function RouteDetermination() {
             onChange={(e) => handleRouteInfoChange(e)}
           />
         </div>
-        <div className="rounded-lg py-3 px-4 bg-white shadow-lg my-3">
+        <div className="rounded-lg py-3 px-4 bg-white shadow-lg my-3 w-11/12 sm:w-auto">
           <div className="flex">
             <input
               type="text"
-              className="border-[1px] border-black rounded-l-lg border-right-[1px] border-r-[0px] py-3 px-4 text-lg w-5/12 border-opacity-40"
+              className="border-[1px] border-black rounded-l-lg border-right-[1px] border-r-[0px] py-3 px-4 text-sm sm:text-lg w-1/3 sm:w-5/12 border-opacity-40"
               placeholder="From where"
               data-route-key="routeFrom"
               value={routeFrom}
@@ -396,14 +396,14 @@ export function RouteDetermination() {
             />
             <input
               type="text"
-              className="border-[1px] border-black border-right-[1px] py-3 px-4 text-lg w-5/12 border-opacity-40"
+              className="border-[1px] border-black border-right-[1px] py-3 px-4 text-sm sm:text-lg w-1/3 sm:w-5/12 border-opacity-40"
               placeholder="To where"
               data-route-key="routeTo"
               value={routeTo}
               onChange={(e) => handleRouteInfoChange(e)}
             />
             <button
-              className="bg-green-500 w-2/12 rounded-r-lg uppercase text-white font-bold text-center py-3"
+              className="bg-green-500 w-1/3 sm:w-1/6 rounded-r-lg uppercase text-white font-bold text-center py-3 px-1 text-sm sm:text-lg"
               onClick={handleNotify}
             >
               Search
@@ -413,7 +413,7 @@ export function RouteDetermination() {
             <div className="flex mt-3">
               <input
                 type="text"
-                className="border-[1px] border-black rounded-l-lg border-right-[1px] border-r-[0px] py-3 px-4 text-lg w-5/12 border-opacity-40"
+                className="border-[1px] border-black rounded-l-lg border-right-[1px] border-r-[0px] py-3 px-4 text-sm sm:text-lg w-1/3 sm:w-5/12 border-opacity-40"
                 placeholder="Intermediate stop 1"
                 data-route-key="firstIntermediateStop"
                 value={firstIntermediateStop}
@@ -421,7 +421,7 @@ export function RouteDetermination() {
               />
               <input
                 type="text"
-                className="border-[1px] border-black rounded-r-lg border-right-[1px] py-3 px-4 text-lg w-5/12 border-opacity-40"
+                className="border-[1px] border-black rounded-r-lg border-right-[1px] py-3 px-4 text-sm sm:text-lg w-1/3 sm:w-5/12 border-opacity-40"
                 placeholder="Intermediate stop 2"
                 data-route-key="secondIntermediateStop"
                 value={secondIntermediateStop}

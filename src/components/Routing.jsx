@@ -12,16 +12,23 @@ export default function Routing({ routingBounds }) {
   const currentBounds = routingBounds.map((bound) =>
     L.latLng(bound[0], bound[1])
   );
-  // make the marker not draggable
 
   const map = useMap();
+
+  // new L.marker([49.73899, 18.81291], {
+  //   draggable: false,
+  // }).addTo(map);
 
   useEffect(() => {
     if (!map) return;
 
     const routingControl = L.Routing.control({
       waypoints: currentBounds,
-      routeWhileDragging: true,
+      routeWhileDragging: false,
+      draggableWaypoints: false,
+      lineOptions: {
+        addWaypoints: false,
+      },
     }).addTo(map);
 
     return () => map.removeControl(routingControl);

@@ -92,37 +92,43 @@ export function ShowRouteAndInfoView() {
     )
       .then((response) => response.json())
       .then((data) => {
-        // change it into days, hours and minutes, not only minutes
-        let minutes = 0;
+        let seconds = 0;
         let kilometers = 0;
 
         for (const partRoute of data.routes[0].sections) {
           const partRouteDistance = partRoute.summary.length;
           const partRouteDuration = partRoute.summary.duration;
           kilometers += partRouteDistance;
-          minutes += partRouteDuration;
+          seconds += partRouteDuration;
         }
 
         kilometers = Number((kilometers / 1000).toFixed());
-        minutes = Number((minutes / 60).toFixed());
+
+        const days = Math.floor(seconds / 86400);
+        const hours = Math.floor((seconds / 3600) % 24);
+        const minutes = Math.floor((seconds / 60) % 60);
 
         const cost = Number(
           (kilometers * routeInfo.ratePerKilometer * 1.1).toFixed()
         );
 
-        console.log(data.routes[0].sections);
+        console.log(days && days + "days");
 
         setRoutesHistoryList((prevState) => [
           ...prevState,
           {
             name: allLocationsInRoute,
             distance: ` ${kilometers}km`,
-            duration: ` ${minutes}minutes`,
+            duration: ` ${days ? days + "days" : ""} ${
+              hours ? hours + "hours" : ""
+            } ${minutes ? minutes + "minutes" : ""}`,
             cost: ` ${cost}zł`,
           },
         ]);
       });
   }, []);
+
+  console.log(routesHistoryList);
 
   return (
     <>
@@ -133,7 +139,9 @@ export function ShowRouteAndInfoView() {
         >
           Go back
         </button>
-        <h2 className="mt-12 mb-6">{allLocationsInRoute}</h2>
+        <h2 className="mt-8 sm:mt-12 mb-6 text-sm sm:text-lg">
+          {allLocationsInRoute}
+        </h2>
         <MapContainer
           bounds={mapBounds}
           scrollWheelZoom={true}
@@ -145,7 +153,7 @@ export function ShowRouteAndInfoView() {
           />
           <Routing routingBounds={routingBounds} />
         </MapContainer>
-        <div>
+        <div className="flex justify-center">
           <HistoryRouteItem
             historyRoute={{
               name: allLocationsInRoute,
@@ -156,20 +164,8 @@ export function ShowRouteAndInfoView() {
               cost: routesHistoryList[routesHistoryList.length - 1].cost,
             }}
             index={0}
-            classNames="w-full"
+            additionalClassNames="w-full"
           />
-          {/* <div>
-            Koszt przejazdu:
-            {routesHistoryList[routesHistoryList.length - 1].cost}
-          </div>
-          <div>
-            Czas przejazdu:
-            {routesHistoryList[routesHistoryList.length - 1].duration}
-          </div>
-          <div>
-            Odległość przejazdu:
-            {routesHistoryList[routesHistoryList.length - 1].distance}
-          </div> */}
         </div>
       </div>
     </>
