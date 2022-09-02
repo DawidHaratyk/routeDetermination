@@ -1,6 +1,6 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext } from "react";
 import { RouteContext } from "../contexts/RouteContext";
-import { HistoryRouteItem } from "./HistoryRouteItem";
+import { HistoryRouteItem } from "./index";
 
 export function RoutesHistory() {
   const { routesHistoryList } = useContext(RouteContext);
@@ -10,11 +10,6 @@ export function RoutesHistory() {
       <HistoryRouteItem historyRoute={historyRoute} index={key} />
     )
   );
-
-  // useEffect(() => {
-  //   console.log(currentRoutesHistoryList);
-  // }, []);
-
   return (
     <div>
       <h5 className="text-2xl font-bold mb-6 text-center">Routes history</h5>

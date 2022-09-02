@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Route, Routes } from "react-router-dom";
-import { NotFound } from "./components/NotFound";
+import { NotFound } from "./components/index";
 import { RouteContext } from "./contexts/RouteContext";
 import RouteDeterminationView from "./pages/RouteDeterminationView";
 import { ShowRouteAndInfoView } from "./pages/ShowRouteAndInfoView";

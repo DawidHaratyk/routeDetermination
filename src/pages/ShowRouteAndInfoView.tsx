@@ -9,7 +9,7 @@ import {
   useNavigate,
 } from "react-router-dom";
 import { SingleRoute } from "../types";
-import Routing from "../components/Routing";
+import { Routing } from "../components/index";
 import { RouteContext } from "../contexts/RouteContext";
 import { HistoryRouteItem } from "../components/HistoryRouteItem";
 // fix problem with these styles above (warning)
@@ -73,16 +73,14 @@ export function ShowRouteAndInfoView() {
       secondIntermediateStop.position.longitude,
     ]);
 
-  console.log(routingBounds);
-
-  const firstViaWaypoint =
+  const firstViaWaypoint: string =
     firstIntermediateStop.title &&
     `&via=${firstIntermediateStop.position.latitude},${firstIntermediateStop.position.longitude}`;
-  const secondViaWaypoint =
+  const secondViaWaypoint: string =
     secondIntermediateStop.title &&
     `&via=${secondIntermediateStop.position.latitude},${secondIntermediateStop.position.longitude}`;
 
-  const handleGoBack = () => {
+  const handleGoBack = (): void => {
     navigate(-1);
   };
 
@@ -92,8 +90,8 @@ export function ShowRouteAndInfoView() {
     )
       .then((response) => response.json())
       .then((data) => {
-        let seconds = 0;
-        let kilometers = 0;
+        let seconds: number = 0;
+        let kilometers: number = 0;
 
         for (const partRoute of data.routes[0].sections) {
           const partRouteDistance = partRoute.summary.length;
@@ -104,15 +102,13 @@ export function ShowRouteAndInfoView() {
 
         kilometers = Number((kilometers / 1000).toFixed());
 
-        const days = Math.floor(seconds / 86400);
-        const hours = Math.floor((seconds / 3600) % 24);
-        const minutes = Math.floor((seconds / 60) % 60);
+        const days: number = Math.floor(seconds / 86400);
+        const hours: number = Math.floor((seconds / 3600) % 24);
+        const minutes: number = Math.floor((seconds / 60) % 60);
 
-        const cost = Number(
+        const cost: number = Number(
           (kilometers * routeInfo.ratePerKilometer * 1.1).toFixed()
         );
-
-        console.log(days && days + "days");
 
         setRoutesHistoryList((prevState) => [
           ...prevState,
@@ -127,8 +123,6 @@ export function ShowRouteAndInfoView() {
         ]);
       });
   }, []);
-
-  console.log(routesHistoryList);
 
   return (
     <>

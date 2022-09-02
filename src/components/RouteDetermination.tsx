@@ -1,42 +1,46 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, {
+  memo,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { NavigateFunction, useNavigate } from "react-router-dom";
 import { RouteContext } from "../contexts/RouteContext";
 import { ToastContainer, toast, ToastItem } from "react-toastify";
-import { SingleRoute } from "../types";
+import { RouteInfo, SingleRoute } from "../types";
 import { useNotificationCenter } from "react-toastify/addons/use-notification-center";
 import "react-toastify/dist/ReactToastify.css";
 import { allLocations, API } from "../constants";
+import { Input } from "./index";
 
-export function RouteDetermination() {
+interface DefaultRouteItem {
+  position: {
+    latitude: number;
+    longitude: number;
+  };
+  title: string;
+}
+
+const defaultRouteItem: DefaultRouteItem = {
+  position: {
+    latitude: 0,
+    longitude: 0,
+  },
+  title: "",
+};
+
+const customToastId1: string = "toast-id-1";
+const customToastId2: string = "toast-id-2";
+const customToastId3: string = "toast-id-3";
+const customToastId4: string = "toast-id-4";
+
+export const RouteDetermination = memo(() => {
   const [fetchedRoute, setFetchedRoute] = useState<SingleRoute[]>([
-    {
-      position: {
-        latitude: 0,
-        longitude: 0,
-      },
-      title: "",
-    },
-    {
-      position: {
-        latitude: 0,
-        longitude: 0,
-      },
-      title: "",
-    },
-    {
-      position: {
-        latitude: 0,
-        longitude: 0,
-      },
-      title: "",
-    },
-    {
-      position: {
-        latitude: 0,
-        longitude: 0,
-      },
-      title: "",
-    },
+    defaultRouteItem,
+    defaultRouteItem,
+    defaultRouteItem,
+    defaultRouteItem,
   ]);
   const [areIntermediateStopsVisible, setAreIntermediateStopsVisible] =
     useState<boolean>(false);
@@ -48,7 +52,7 @@ export function RouteDetermination() {
     firstIntermediateStop,
     secondIntermediateStop,
     ratePerKilometer,
-  } = routeInfo;
+  } = routeInfo as RouteInfo;
 
   const navigate: NavigateFunction = useNavigate();
 
@@ -73,39 +77,19 @@ export function RouteDetermination() {
     secondIntermediateStopAPI,
   ] = apiUrlList as string[];
 
-  // const routeFromAPI =
-  //   routeFrom &&
-  //   `https://geocode.search.hereapi.com/v1/geocode?apikey=rMOBREZMv1w_dZylksrpQ3ONx6ApOyj6yDh7XCeQdds&q=${encodeURIComponent(
-  //     routeFrom
-  //   )}`;
+  const handleRouteInfoChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>): void => {
+      const currentRouteKey: string | null =
+        e.target.getAttribute("data-route-key");
 
-  // const routeToAPI =
-  //   routeTo &&
-  //   `https://geocode.search.hereapi.com/v1/geocode?apikey=rMOBREZMv1w_dZylksrpQ3ONx6ApOyj6yDh7XCeQdds&q=${encodeURIComponent(
-  //     routeTo
-  //   )}`;
-
-  // const firstIntermediateStopAPI = `https://geocode.search.hereapi.com/v1/geocode?apikey=rMOBREZMv1w_dZylksrpQ3ONx6ApOyj6yDh7XCeQdds&q=${encodeURIComponent(
-  //   firstIntermediateStop
-  // )}`;
-
-  // const secondIntermediateStopAPI = `https://geocode.search.hereapi.com/v1/geocode?apikey=rMOBREZMv1w_dZylksrpQ3ONx6ApOyj6yDh7XCeQdds&q=${encodeURIComponent(
-  //   secondIntermediateStop
-  // )}`;
-
-  const handleRouteInfoChange = (
-    e: React.ChangeEvent<HTMLInputElement>
-  ): void => {
-    const currentRouteKey: string | null =
-      e.target.getAttribute("data-route-key");
-
-    currentRouteKey &&
-      setRouteInfo((prevState) => ({
-        ...prevState,
-        [currentRouteKey]: e.target.value,
-      }));
-  };
-  // find out if it'll be better to use useCallback above
+      currentRouteKey &&
+        setRouteInfo((prevState) => ({
+          ...prevState,
+          [currentRouteKey]: e.target.value,
+        }));
+    },
+    [setRouteInfo]
+  );
 
   const handleNotify = (): void => {
     const isFetchingFirstIntermediateStop: boolean =
@@ -117,12 +101,6 @@ export function RouteDetermination() {
         ? true
         : false;
 
-    const customToastId1: string = "toast-id-1";
-    const customToastId2: string = "toast-id-2";
-    const customToastId3: string = "toast-id-3";
-    const customToastId4: string = "toast-id-4";
-
-    // can i loop over these fetches somehow? is it worth?
     fetch(routeFromAPI)
       .then((response) => response.json())
       .then((data) => {
@@ -151,14 +129,7 @@ export function RouteDetermination() {
       .catch(() => {
         setFetchedRoute((prevState) => {
           const newFetchedRoute = prevState.map((locationItem, key) => {
-            if (key === 0)
-              return {
-                position: {
-                  latitude: 0,
-                  longitude: 0,
-                },
-                title: "",
-              };
+            if (key === 0) return defaultRouteItem;
             else return locationItem;
           });
 
@@ -197,14 +168,7 @@ export function RouteDetermination() {
       .catch(() => {
         setFetchedRoute((prevState) => {
           const newFetchedRoute = prevState.map((locationItem, key) => {
-            if (key === 3)
-              return {
-                position: {
-                  latitude: 0,
-                  longitude: 0,
-                },
-                title: "",
-              };
+            if (key === 3) return defaultRouteItem;
             else return locationItem;
           });
 
@@ -241,14 +205,7 @@ export function RouteDetermination() {
         .catch(() => {
           setFetchedRoute((prevState) => {
             const newFetchedRoute = prevState.map((locationItem, key) => {
-              if (key === 1)
-                return {
-                  position: {
-                    latitude: 0,
-                    longitude: 0,
-                  },
-                  title: "",
-                };
+              if (key === 1) return defaultRouteItem;
               else return locationItem;
             });
 
@@ -286,14 +243,7 @@ export function RouteDetermination() {
         .catch(() => {
           setFetchedRoute((prevState) => {
             const newFetchedRoute = prevState.map((locationItem, key) => {
-              if (key === 2)
-                return {
-                  position: {
-                    latitude: 0,
-                    longitude: 0,
-                  },
-                  title: "",
-                };
+              if (key === 2) return defaultRouteItem;
               else return locationItem;
             });
 
@@ -306,18 +256,11 @@ export function RouteDetermination() {
         });
   };
 
-  const handleIntermediateStopsVisibility = (): void => {
+  const handleIntermediateStopsVisibilityAndInputsReset = (): void => {
     setFetchedRoute((prevState) => {
       const newFetchedRoute = prevState.map((locationItem, key) => {
-        if (key === 1 || key === 2) {
-          return {
-            position: {
-              latitude: 0,
-              longitude: 0,
-            },
-            title: "",
-          };
-        } else return locationItem;
+        if (key === 1 || key === 2) return defaultRouteItem;
+        else return locationItem;
       });
 
       return newFetchedRoute;
@@ -357,8 +300,6 @@ export function RouteDetermination() {
   }, [fetchedRoute, navigate, notifications]);
 
   useEffect(() => {
-    console.log(routeInfo);
-
     setRouteInfo((prevState) => ({
       ...prevState,
       routeFrom: "",
@@ -366,7 +307,7 @@ export function RouteDetermination() {
       firstIntermediateStop: "",
       secondIntermediateStop: "",
     }));
-  }, []);
+  }, [setRouteInfo]);
 
   return (
     <div className="bg-cyan-100 min-h-48 flex justify-center items-center pt-20 pb-10 mb-20">
@@ -386,21 +327,19 @@ export function RouteDetermination() {
         </div>
         <div className="rounded-lg py-3 px-4 bg-white shadow-lg my-3 w-11/12 sm:w-auto">
           <div className="flex">
-            <input
-              type="text"
-              className="border-[1px] border-black rounded-l-lg border-right-[1px] border-r-[0px] py-3 px-4 text-sm sm:text-lg w-1/3 sm:w-5/12 border-opacity-40"
+            <Input
+              classes="border-[1px] border-black rounded-l-lg border-right-[1px] border-r-[0px] py-3 px-4 text-sm sm:text-lg w-1/3 sm:w-5/12 border-opacity-40"
               placeholder="From where"
-              data-route-key="routeFrom"
+              dataRouteKey="routeFrom"
               value={routeFrom}
-              onChange={(e) => handleRouteInfoChange(e)}
+              handleRouteInfoChange={handleRouteInfoChange}
             />
-            <input
-              type="text"
-              className="border-[1px] border-black border-right-[1px] py-3 px-4 text-sm sm:text-lg w-1/3 sm:w-5/12 border-opacity-40"
+            <Input
+              classes="border-[1px] border-black border-right-[1px] py-3 px-4 text-sm sm:text-lg w-1/3 sm:w-5/12 border-opacity-40"
               placeholder="To where"
-              data-route-key="routeTo"
+              dataRouteKey="routeTo"
               value={routeTo}
-              onChange={(e) => handleRouteInfoChange(e)}
+              handleRouteInfoChange={handleRouteInfoChange}
             />
             <button
               className="bg-green-500 w-1/3 sm:w-1/6 rounded-r-lg uppercase text-white font-bold text-center py-3 px-1 text-sm sm:text-lg"
@@ -411,28 +350,26 @@ export function RouteDetermination() {
           </div>
           {areIntermediateStopsVisible && (
             <div className="flex mt-3">
-              <input
-                type="text"
-                className="border-[1px] border-black rounded-l-lg border-right-[1px] border-r-[0px] py-3 px-4 text-sm sm:text-lg w-1/3 sm:w-5/12 border-opacity-40"
+              <Input
+                classes="border-[1px] border-black rounded-l-lg border-right-[1px] border-r-[0px] py-3 px-4 text-sm sm:text-lg w-1/3 sm:w-5/12 border-opacity-40"
                 placeholder="Intermediate stop 1"
-                data-route-key="firstIntermediateStop"
+                dataRouteKey="firstIntermediateStop"
                 value={firstIntermediateStop}
-                onChange={(e) => handleRouteInfoChange(e)}
+                handleRouteInfoChange={handleRouteInfoChange}
               />
-              <input
-                type="text"
-                className="border-[1px] border-black rounded-r-lg border-right-[1px] py-3 px-4 text-sm sm:text-lg w-1/3 sm:w-5/12 border-opacity-40"
+              <Input
+                classes="border-[1px] border-black rounded-r-lg border-right-[1px] py-3 px-4 text-sm sm:text-lg w-1/3 sm:w-5/12 border-opacity-40"
                 placeholder="Intermediate stop 2"
-                data-route-key="secondIntermediateStop"
+                dataRouteKey="secondIntermediateStop"
                 value={secondIntermediateStop}
-                onChange={(e) => handleRouteInfoChange(e)}
+                handleRouteInfoChange={handleRouteInfoChange}
               />
             </div>
           )}
         </div>
         <button
           className="text-cyan-700 font-bold mb-3"
-          onClick={handleIntermediateStopsVisibility}
+          onClick={handleIntermediateStopsVisibilityAndInputsReset}
         >
           {areIntermediateStopsVisible
             ? "Hide intermediate stops"
@@ -452,4 +389,4 @@ export function RouteDetermination() {
       />
     </div>
   );
-}
+});

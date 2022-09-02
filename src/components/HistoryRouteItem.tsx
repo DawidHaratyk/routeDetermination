@@ -1,48 +1,15 @@
-import {
-  Document,
-  Font,
-  Page,
-  PDFDownloadLink,
-  StyleSheet,
-  Text,
-  View,
-} from "@react-pdf/renderer";
+import { PDFDownloadLink } from "@react-pdf/renderer";
 import classNames from "classnames";
 import React from "react";
 import { HistoryRoute } from "../types";
-import { RouteDetail } from "./RouteDetail";
+import { PdfDocument } from "./PdfDocument";
+import { RouteDetail } from "./index";
 
 interface HistoryRouteI {
   historyRoute: HistoryRoute;
   index: number;
   additionalClassNames?: string;
 }
-
-const styles = StyleSheet.create({
-  page: {
-    fontFamily: "Roboto",
-  },
-  largerText: {
-    fontSize: "16px",
-    textAlign: "justify",
-    padding: "0 40px",
-  },
-  routeName: {
-    display: "flex",
-    alignItems: "center",
-    marginTop: "30px",
-  },
-  details: {
-    display: "flex",
-    alignItems: "center",
-    marginTop: "20px",
-  },
-});
-
-Font.register({
-  family: "Roboto",
-  src: "https://cdnjs.cloudflare.com/ajax/libs/ink/3.1.10/fonts/Roboto/roboto-light-webfont.ttf",
-});
 
 export function HistoryRouteItem({
   historyRoute,
@@ -51,17 +18,15 @@ export function HistoryRouteItem({
 }: HistoryRouteI) {
   const { name, distance, duration, cost } = historyRoute as HistoryRoute;
   const currentIndex: number = index + 1;
-  console.log(name, distance, duration, cost);
-  // add useMemo
 
-  const containerClasses = classNames(
+  const containerClasses: string = classNames(
     `flex w-11/12 md:w-4/5 h-24 lg:h-28 bg-green-50 border-2 border-green-500 rounded-md mb-3 items-center ${additionalClassNames}`,
     {
       "h-44": additionalClassNames,
     }
   );
 
-  const detailsClasses = classNames({
+  const detailsClasses: string = classNames({
     "mb-2": additionalClassNames,
   });
 
@@ -95,22 +60,8 @@ export function HistoryRouteItem({
             />
           </div>
           {additionalClassNames && (
-            // wrong state going into pdf!
             <PDFDownloadLink
-              document={
-                <Document>
-                  <Page size="A4" style={styles.page}>
-                    <View style={styles.routeName}>
-                      <Text style={styles.largerText}>{name}</Text>
-                    </View>
-                    <View style={styles.details}>
-                      <Text>Distance: {distance}</Text>
-                      <Text>Duration: {duration}</Text>
-                      <Text>Cost: {cost}</Text>
-                    </View>
-                  </Page>
-                </Document>
-              }
+              document={<PdfDocument pdfDetails={historyRoute} />}
               fileName="routeDetails"
               className="bg-green-400 text-white mr-4 w-36 text-sm text-center table-cell align-middle rounded p-2"
             >
