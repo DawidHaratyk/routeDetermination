@@ -5,4 +5,4 @@ export const allLocations: string[] = [
   "secondIntermediateStop",
 ];
 
-export const API: string = `https://geocode.search.hereapi.com/v1/geocode?apikey=rMOBREZMv1w_dZylksrpQ3ONx6ApOyj6yDh7XCeQdds&q=`;
+export const API: string = `https://geocode.search.hereapi.com/v1/geocode?apikey=${process.env.REACT_APP_API_KEY}&q=`;
