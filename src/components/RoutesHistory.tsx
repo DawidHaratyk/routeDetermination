@@ -1,9 +1,9 @@
-import React, { useContext } from "react";
-import { RouteContext } from "../contexts/RouteContext";
+import React from "react";
+import { useRoute } from "../contexts/RouteContext";
 import { HistoryRouteItem } from "./index";
 
 export function RoutesHistory() {
-  const { routesHistoryList } = useContext(RouteContext);
+  const { routesHistoryList } = useRoute();
 
   const currentRoutesHistoryList = routesHistoryList.map(
     (historyRoute, key) => (

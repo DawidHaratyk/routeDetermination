@@ -1,11 +1,64 @@
-import { createContext, Dispatch, SetStateAction } from "react";
+import {
+  createContext,
+  Dispatch,
+  ReactNode,
+  SetStateAction,
+  useContext,
+  useState,
+} from "react";
 import { HistoryRoute, RouteInfo } from "../types";
 
 interface RouteContextInterface {
   routeInfo: RouteInfo;
   setRouteInfo: Dispatch<SetStateAction<RouteInfo>>;
-  routesHistoryList: HistoryRoute[] | [];
-  setRoutesHistoryList: Dispatch<SetStateAction<HistoryRoute[] | []>>;
+  routesHistoryList: HistoryRoute[];
+  setRoutesHistoryList: Dispatch<SetStateAction<HistoryRoute[]>>;
 }
 
-export const RouteContext = createContext({} as RouteContextInterface);
+interface RouteProviderI {
+  children: ReactNode;
+}
+
+const RouteContext = createContext<RouteContextInterface | null>(null);
+
+export const RouteProvider = ({ children }: RouteProviderI) => {
+  const [routeInfo, setRouteInfo] = useState<RouteInfo>({
+    routeFrom: "",
+    routeTo: "",
+    firstIntermediateStop: "",
+    secondIntermediateStop: "",
+    ratePerKilometer: 0.5,
+  });
+
+  const [routesHistoryList, setRoutesHistoryList] = useState<HistoryRoute[]>([
+    {
+      name: "London - Karaiby",
+      distance: "15536km",
+      duration: "2h",
+      cost: "800zł",
+    },
+  ]);
+
+  return (
+    <RouteContext.Provider
+      value={{
+        routeInfo,
+        setRouteInfo,
+        routesHistoryList,
+        setRoutesHistoryList,
+      }}
+    >
+      {children}
+    </RouteContext.Provider>
+  );
+};
+
+export const useRoute = () => {
+  const routeContext = useContext(RouteContext);
+
+  if (!routeContext) {
+    throw new Error("useRoute must be use inside RouteProvider!");
+  }
+
+  return routeContext;
+};

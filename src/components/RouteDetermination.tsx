@@ -1,28 +1,14 @@
-import React, {
-  memo,
-  useCallback,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
+import React, { memo, useCallback, useEffect, useState } from "react";
 import { NavigateFunction, useNavigate } from "react-router-dom";
-import { RouteContext } from "../contexts/RouteContext";
 import { ToastContainer, toast, ToastItem } from "react-toastify";
 import { RouteInfo, SingleRoute } from "../types";
 import { useNotificationCenter } from "react-toastify/addons/use-notification-center";
 import "react-toastify/dist/ReactToastify.css";
 import { allLocations, API } from "../constants";
 import { Input } from "./index";
+import { useRoute } from "../contexts/RouteContext";
 
-interface DefaultRouteItem {
-  position: {
-    latitude: number;
-    longitude: number;
-  };
-  title: string;
-}
-
-const defaultRouteItem: DefaultRouteItem = {
+const defaultRouteItem: SingleRoute = {
   position: {
     latitude: 0,
     longitude: 0,
@@ -45,14 +31,14 @@ export const RouteDetermination = memo(() => {
   const [areIntermediateStopsVisible, setAreIntermediateStopsVisible] =
     useState<boolean>(false);
 
-  const { routeInfo, setRouteInfo } = useContext(RouteContext);
+  const { routeInfo, setRouteInfo } = useRoute();
   const {
     routeFrom,
     routeTo,
     firstIntermediateStop,
     secondIntermediateStop,
     ratePerKilometer,
-  } = routeInfo as RouteInfo;
+  } = routeInfo;
 
   const navigate: NavigateFunction = useNavigate();
 
@@ -91,7 +77,7 @@ export const RouteDetermination = memo(() => {
     [setRouteInfo]
   );
 
-  const handleNotify = (): void => {
+  const handleNotify = () => {
     const isFetchingFirstIntermediateStop: boolean =
       areIntermediateStopsVisible && firstIntermediateStop.length
         ? true
@@ -295,7 +281,7 @@ export const RouteDetermination = memo(() => {
       (firstIntermediateStop ? Boolean(fetchedRoute[1].title) : true) &&
       (secondIntermediateStop ? Boolean(fetchedRoute[2].title) : true)
     ) {
-      navigate("/foundRoute", { state: fetchedRoute });
+      navigate(`/foundRoute`, { state: fetchedRoute });
     }
   }, [fetchedRoute, navigate, notifications]);
 

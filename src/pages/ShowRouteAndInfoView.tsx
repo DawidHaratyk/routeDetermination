@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useEffect } from "react";
 import { MapContainer, TileLayer } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import { LatLngBoundsExpression } from "leaflet";
@@ -9,14 +9,14 @@ import {
   useNavigate,
 } from "react-router-dom";
 import { SingleRoute } from "../types";
-import { Routing } from "../components/index";
-import { RouteContext } from "../contexts/RouteContext";
+import { PdfDocument, Routing, ShowRouteWrapper } from "../components/index";
 import { HistoryRouteItem } from "../components/HistoryRouteItem";
+import { useRoute } from "../contexts/RouteContext";
+import { PDFDownloadLink } from "@react-pdf/renderer";
 // fix problem with these styles above (warning)
 
 export function ShowRouteAndInfoView() {
-  const { routeInfo, routesHistoryList, setRoutesHistoryList } =
-    useContext(RouteContext);
+  const { routeInfo, routesHistoryList, setRoutesHistoryList } = useRoute();
 
   const navigate: NavigateFunction = useNavigate();
 
@@ -125,43 +125,34 @@ export function ShowRouteAndInfoView() {
   }, []);
 
   return (
-    <>
-      <div className="flex flex-col items-center text-lg font-semibold w-4/5 h-3/5 mx-auto">
-        <button
-          className="rounded text-green-500 font-bold text-center py-2 px-4 border-2 border-green-500 self-start mt-10"
-          onClick={handleGoBack}
-        >
-          Go back
-        </button>
-        <h2 className="mt-8 sm:mt-12 mb-6 text-sm sm:text-lg">
-          {allLocationsInRoute}
-        </h2>
-        <MapContainer
-          bounds={mapBounds}
-          scrollWheelZoom={true}
-          style={{ height: "60vh", width: "80vw", marginBottom: "50px" }}
-        >
-          <TileLayer
-            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          />
-          <Routing routingBounds={routingBounds} />
-        </MapContainer>
-        <div className="flex justify-center">
-          <HistoryRouteItem
-            historyRoute={{
-              name: allLocationsInRoute,
-              distance:
-                routesHistoryList[routesHistoryList.length - 1].distance,
-              duration:
-                routesHistoryList[routesHistoryList.length - 1].duration,
-              cost: routesHistoryList[routesHistoryList.length - 1].cost,
-            }}
-            index={0}
-            additionalClassNames="w-full"
-          />
-        </div>
+    <ShowRouteWrapper>
+      <button
+        className="rounded text-green-500 font-bold text-center py-2 px-4 border-2 border-green-500 self-start mt-10"
+        onClick={handleGoBack}
+      >
+        Go back
+      </button>
+      <h2 className="mt-8 sm:mt-12 mb-6 text-sm sm:text-lg">
+        {allLocationsInRoute}
+      </h2>
+      <MapContainer
+        bounds={mapBounds}
+        scrollWheelZoom={true}
+        style={{ height: "60vh", width: "80vw", marginBottom: "50px" }}
+      >
+        <TileLayer
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        />
+        <Routing routingBounds={routingBounds} />
+      </MapContainer>
+      <div className="flex justify-center">
+        <HistoryRouteItem
+          historyRoute={routesHistoryList[routesHistoryList.length - 1]}
+          index={0}
+          additionalClassNames="w-full"
+        />
       </div>
-    </>
+    </ShowRouteWrapper>
   );
 }

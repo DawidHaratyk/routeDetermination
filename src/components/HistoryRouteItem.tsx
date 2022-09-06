@@ -18,6 +18,7 @@ export function HistoryRouteItem({
 }: HistoryRouteI) {
   const { name, distance, duration, cost } = historyRoute as HistoryRoute;
   const currentIndex: number = index + 1;
+  console.log(historyRoute);
 
   const containerClasses: string = classNames(
     `flex w-11/12 md:w-4/5 h-24 lg:h-28 bg-green-50 border-2 border-green-500 rounded-md mb-3 items-center ${additionalClassNames}`,
@@ -61,7 +62,7 @@ export function HistoryRouteItem({
           </div>
           {additionalClassNames && (
             <PDFDownloadLink
-              document={<PdfDocument pdfDetails={historyRoute} />}
+              document={<PdfDocument {...historyRoute} />}
               fileName="routeDetails"
               className="bg-green-400 text-white mr-4 w-36 text-sm text-center table-cell align-middle rounded p-2"
             >

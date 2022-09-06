@@ -6,3 +6,4 @@ export { PdfDocument } from "./PdfDocument";
 export { RouteDetail } from "./RouteDetail";
 export { Routing } from "./Routing";
 export { HistoryRouteItem } from "./HistoryRouteItem";
+export { ShowRouteWrapper } from "./ShowRouteWrapper";
