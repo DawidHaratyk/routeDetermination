@@ -7,3 +7,5 @@ export { RouteDetail } from "./RouteDetail";
 export { Routing } from "./Routing";
 export { HistoryRouteItem } from "./HistoryRouteItem";
 export { ShowRouteWrapper } from "./ShowRouteWrapper";
+export { PricePerKilometerView } from "./PricePerKilometerView";
+export { DefaultInputsAndSearchButtonView } from "./DefaultInputsAndSearchButtonView";
