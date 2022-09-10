@@ -30,14 +30,9 @@ export const RouteProvider = ({ children }: RouteProviderI) => {
     ratePerKilometer: 0.5,
   });
 
-  const [routesHistoryList, setRoutesHistoryList] = useState<HistoryRoute[]>([
-    {
-      name: "London - Karaiby",
-      distance: "15536km",
-      duration: "2h",
-      cost: "800zł",
-    },
-  ]);
+  const [routesHistoryList, setRoutesHistoryList] = useState<HistoryRoute[]>(
+    []
+  );
 
   return (
     <RouteContext.Provider

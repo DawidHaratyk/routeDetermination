@@ -1,5 +1,5 @@
 import React, { memo, useCallback, useEffect, useState } from "react";
-import { NavigateFunction, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { toast, ToastItem } from "react-toastify";
 import { SingleRoute } from "../types";
 import { useNotificationCenter } from "react-toastify/addons/use-notification-center";
@@ -14,40 +14,27 @@ import { AdditionalInputs } from "./AdditionalInputs";
 import { ToastWrapper } from "./ToastWrapper";
 
 export const RouteDetermination = memo(() => {
+  const { routeInfo, setRouteInfo } = useRoute();
+  const { firstIntermediateStop, secondIntermediateStop, ratePerKilometer } =
+    routeInfo;
+
+  const navigate = useNavigate();
+
+  const { notifications, remove } = useNotificationCenter<{}>();
+
   const [fetchedRoute, setFetchedRoute] = useState<SingleRoute[]>([
     defaultRouteItem,
     defaultRouteItem,
     defaultRouteItem,
     defaultRouteItem,
   ]);
+
   const [areIntermediateStopsVisible, setAreIntermediateStopsVisible] =
     useState<boolean>(false);
-
-  const { routeInfo, setRouteInfo } = useRoute();
-  const { firstIntermediateStop, secondIntermediateStop, ratePerKilometer } =
-    routeInfo;
-
-  const navigate: NavigateFunction = useNavigate();
-
-  const { notifications, remove } = useNotificationCenter<{}>();
 
   const intermediateStopsButtonText = areIntermediateStopsVisible
     ? "Hide intermediate stops"
     : "Add intermediate stops";
-
-  const handleRouteInfoChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      const currentRouteKey: string | null =
-        e.target.getAttribute("data-route-key");
-
-      currentRouteKey &&
-        setRouteInfo((prevState) => ({
-          ...prevState,
-          [currentRouteKey]: e.target.value,
-        }));
-    },
-    [setRouteInfo]
-  );
 
   const handleIntermediateStopsVisibilityAndInputsReset = () => {
     setFetchedRoute((prevState) => {
@@ -68,14 +55,16 @@ export const RouteDetermination = memo(() => {
     setAreIntermediateStopsVisible((prevState) => !prevState);
   };
 
-  const removeNotificationFromNotificationCenter = toast.onChange(
-    (payload: ToastItem): void => {
-      if (payload.status === "added") {
-        setTimeout<[]>(() => {
-          remove(payload.id);
-        }, 3000);
-      }
-    }
+  const removeNotificationFromNotificationCenter = useCallback(
+    () =>
+      toast.onChange((payload: ToastItem) => {
+        if (payload.status === "added") {
+          setTimeout<[]>(() => {
+            remove(payload.id);
+          }, 3000);
+        }
+      }),
+    []
   );
 
   useEffect(() => {
@@ -88,9 +77,18 @@ export const RouteDetermination = memo(() => {
       (firstIntermediateStop ? Boolean(fetchedRoute[1].title) : true) &&
       (secondIntermediateStop ? Boolean(fetchedRoute[2].title) : true)
     ) {
-      navigate(`/foundRoute`, { state: fetchedRoute });
+      navigate("/foundRoute", { state: fetchedRoute });
     }
-  }, [fetchedRoute, navigate, notifications]);
+  }, [fetchedRoute, navigate, removeNotificationFromNotificationCenter]);
+
+  useEffect(() => {
+    setFetchedRoute([
+      defaultRouteItem,
+      defaultRouteItem,
+      defaultRouteItem,
+      defaultRouteItem,
+    ]);
+  }, [notifications]);
 
   useEffect(() => {
     setRouteInfo((prevState) => ({
@@ -108,22 +106,18 @@ export const RouteDetermination = memo(() => {
         <h4 className="text-2xl sm:text-3xl font-bold mb-6 text-center">
           Where do you want to travel today?
         </h4>
-        <PricePerKilometerView
-          ratePerKilometer={ratePerKilometer}
-          handleRouteInfoChange={handleRouteInfoChange}
-        />
+        <PricePerKilometerView ratePerKilometer={ratePerKilometer} />
         <div className="rounded-lg py-3 px-4 bg-white shadow-lg my-3 w-11/12 sm:w-auto">
           <DefaultInputsAndSearchButtonView
-            handleRouteInfoChange={handleRouteInfoChange}
             areIntermediateStopsVisible={areIntermediateStopsVisible}
             setFetchedRoute={setFetchedRoute}
             {...routeInfo}
+            // pass routeInfo here or import context in the DefaultInputsAndSearchButtonView component?
           />
           {areIntermediateStopsVisible && (
             <AdditionalInputs
               firstIntermediateStop={firstIntermediateStop}
               secondIntermediateStop={secondIntermediateStop}
-              handleRouteInfoChange={handleRouteInfoChange}
             />
           )}
         </div>

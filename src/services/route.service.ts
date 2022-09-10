@@ -34,9 +34,8 @@ interface ReturnedDataStructure {
   items: ReturnedElementStructure[];
 }
 
-export const getRoute = async (Api: string): Promise<ReturnedDataStructure> => {
-  const data = (await fetch(Api)).json();
-  // find out how to type fetch in ts :D
+export const getRoute = async (api: string): Promise<ReturnedDataStructure> => {
+  const data = (await fetch(api)).json();
 
   return data;
 };

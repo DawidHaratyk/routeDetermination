@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { MapContainer, TileLayer } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import { LatLngBoundsExpression } from "leaflet";
@@ -9,13 +9,14 @@ import {
   useNavigate,
 } from "react-router-dom";
 import { SingleRoute } from "../types";
-import { PdfDocument, Routing, ShowRouteWrapper } from "../components/index";
+import { Routing, ShowRouteWrapper } from "../components/index";
 import { HistoryRouteItem } from "../components/HistoryRouteItem";
 import { useRoute } from "../contexts/RouteContext";
-import { PDFDownloadLink } from "@react-pdf/renderer";
 // fix problem with these styles above (warning)
 
-export function ShowRouteAndInfoView() {
+export const ShowRouteAndInfoView = () => {
+  const [canRouteBeCalculated, setCanRouteBeCalculated] = useState(true);
+
   const { routeInfo, routesHistoryList, setRoutesHistoryList } = useRoute();
 
   const navigate: NavigateFunction = useNavigate();
@@ -23,14 +24,14 @@ export function ShowRouteAndInfoView() {
   const location: Location = useLocation();
   const state = location.state as SingleRoute[];
 
-  const [
-    routeFrom,
-    firstIntermediateStop,
-    secondIntermediateStop,
-    routeTo,
-  ]: SingleRoute[] = state;
+  const [routeFrom, firstIntermediateStop, secondIntermediateStop, routeTo] =
+    state;
 
-  let allLocationsInRoute: string = ``;
+  let allLocationsInRoute = ``;
+  const lastElemenentOfRoutesHistoryList =
+    routesHistoryList[routesHistoryList.length - 1];
+
+  console.log(lastElemenentOfRoutesHistoryList);
 
   for (const [index, place] of state.entries()) {
     place.title &&
@@ -80,7 +81,7 @@ export function ShowRouteAndInfoView() {
     secondIntermediateStop.title &&
     `&via=${secondIntermediateStop.position.latitude},${secondIntermediateStop.position.longitude}`;
 
-  const handleGoBack = (): void => {
+  const handleGoBack = () => {
     navigate(-1);
   };
 
@@ -90,37 +91,42 @@ export function ShowRouteAndInfoView() {
     )
       .then((response) => response.json())
       .then((data) => {
-        let seconds: number = 0;
-        let kilometers: number = 0;
+        let seconds = 0;
+        let kilometers = 0;
 
-        for (const partRoute of data.routes[0].sections) {
-          const partRouteDistance = partRoute.summary.length;
-          const partRouteDuration = partRoute.summary.duration;
-          kilometers += partRouteDistance;
-          seconds += partRouteDuration;
-        }
+        // check if route can be calculated
+        if (data.notices.length < 2) {
+          for (const partRoute of data.routes[0].sections) {
+            const partRouteDistance: number = partRoute.summary.length;
+            const partRouteDuration: number = partRoute.summary.duration;
+            kilometers += partRouteDistance;
+            seconds += partRouteDuration;
+          }
 
-        kilometers = Number((kilometers / 1000).toFixed());
+          kilometers = Number((kilometers / 1000).toFixed());
 
-        const days: number = Math.floor(seconds / 86400);
-        const hours: number = Math.floor((seconds / 3600) % 24);
-        const minutes: number = Math.floor((seconds / 60) % 60);
+          const days = Math.floor(seconds / 86400);
+          const hours = Math.floor((seconds / 3600) % 24);
+          const minutes = Math.floor((seconds / 60) % 60);
 
-        const cost: number = Number(
-          (kilometers * routeInfo.ratePerKilometer * 1.1).toFixed()
-        );
+          const cost = Number(
+            (kilometers * routeInfo.ratePerKilometer * 1.1).toFixed()
+          );
 
-        setRoutesHistoryList((prevState) => [
-          ...prevState,
-          {
-            name: allLocationsInRoute,
-            distance: ` ${kilometers}km`,
-            duration: ` ${days ? days + "days" : ""} ${
-              hours ? hours + "hours" : ""
-            } ${minutes ? minutes + "minutes" : ""}`,
-            cost: ` ${cost}zł`,
-          },
-        ]);
+          setRoutesHistoryList((prevState) => [
+            ...prevState,
+            {
+              name: allLocationsInRoute,
+              distance: ` ${kilometers}km`,
+              duration: ` ${days ? days + "days" : ""} ${
+                hours ? hours + "hours" : ""
+              } ${minutes ? minutes + "minutes" : ""}`,
+              cost: ` ${cost}zł`,
+            },
+          ]);
+        } else setCanRouteBeCalculated(false);
+
+        // do I want to not display fetched route(but can't be done driving by car)? In the history routes
       });
   }, []);
 
@@ -147,12 +153,18 @@ export function ShowRouteAndInfoView() {
         <Routing routingBounds={routingBounds} />
       </MapContainer>
       <div className="flex justify-center">
-        <HistoryRouteItem
-          historyRoute={routesHistoryList[routesHistoryList.length - 1]}
-          index={0}
-          additionalClassNames="w-full"
-        />
+        {canRouteBeCalculated ? (
+          lastElemenentOfRoutesHistoryList && (
+            <HistoryRouteItem
+              historyRoute={lastElemenentOfRoutesHistoryList}
+              index={0}
+              additionalClassNames="w-full"
+            />
+          )
+        ) : (
+          <h3>The route can't be done driving by car</h3>
+        )}
       </div>
     </ShowRouteWrapper>
   );
-}
+};

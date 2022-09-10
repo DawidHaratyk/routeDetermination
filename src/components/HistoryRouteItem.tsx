@@ -1,9 +1,10 @@
 import { PDFDownloadLink } from "@react-pdf/renderer";
 import classNames from "classnames";
-import React from "react";
+import React, { useEffect } from "react";
 import { HistoryRoute } from "../types";
 import { PdfDocument } from "./PdfDocument";
 import { RouteDetail } from "./index";
+import { useRoute } from "../contexts/RouteContext";
 
 interface HistoryRouteI {
   historyRoute: HistoryRoute;
@@ -16,17 +17,18 @@ export function HistoryRouteItem({
   index,
   additionalClassNames,
 }: HistoryRouteI) {
-  const { name, distance, duration, cost } = historyRoute as HistoryRoute;
+  const { name, distance, duration, cost } = historyRoute;
+  console.log(historyRoute);
   const currentIndex: number = index + 1;
 
-  const containerClasses: string = classNames(
+  const containerClasses = classNames(
     `flex w-11/12 md:w-4/5 h-24 lg:h-28 bg-green-50 border-2 border-green-500 rounded-md mb-3 items-center ${additionalClassNames}`,
     {
       "h-44": additionalClassNames,
     }
   );
 
-  const detailsClasses: string = classNames({
+  const detailsClasses = classNames({
     "mb-2": additionalClassNames,
   });
 
@@ -64,6 +66,7 @@ export function HistoryRouteItem({
               document={<PdfDocument {...historyRoute} />}
               fileName="routeDetails"
               className="bg-green-400 text-white mr-4 w-36 text-sm text-center table-cell align-middle rounded p-2"
+              key={historyRoute.cost}
             >
               Generate PDF
             </PDFDownloadLink>

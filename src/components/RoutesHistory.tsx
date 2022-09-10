@@ -10,6 +10,12 @@ export function RoutesHistory() {
       <HistoryRouteItem historyRoute={historyRoute} index={key} />
     )
   );
+
+  // const currentRoutesHistoryList
+  // currentRoutesHistoryList.length
+  // ? currentRoutesHistoryList
+  // : "There is none routes in history";
+
   return (
     <div>
       <h5 className="text-2xl font-bold mb-6 text-center">Routes history</h5>

@@ -1,21 +1,17 @@
 import React, { memo } from "react";
+import { useRouteInfoChange } from "../hooks/useRouteInfoChange";
 
 interface InputI {
   classes: string;
   placeholder: string;
   dataRouteKey: string;
   value: string;
-  handleRouteInfoChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 export const Input = memo(
-  ({
-    classes,
-    placeholder,
-    dataRouteKey,
-    value,
-    handleRouteInfoChange,
-  }: InputI) => {
+  ({ classes, placeholder, dataRouteKey, value }: InputI) => {
+    const { handleRouteInfoChange } = useRouteInfoChange();
+
     return (
       <input
         type="text"
