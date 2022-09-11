@@ -5,6 +5,12 @@ import { Input } from "./index";
 import { defaultRouteItem } from "../constants";
 import { toast } from "react-toastify";
 import { useApiUrls } from "../hooks/useApiUrls";
+import {
+  customToastId1,
+  customToastId2,
+  customToastId3,
+  customToastId4,
+} from "../constants";
 
 interface DefaultInputsAndSearchButtonViewI {
   areIntermediateStopsVisible: boolean;
@@ -14,11 +20,6 @@ interface DefaultInputsAndSearchButtonViewI {
   firstIntermediateStop: string;
   secondIntermediateStop: string;
 }
-
-const customToastId1: string = "toast-id-1";
-const customToastId2: string = "toast-id-2";
-const customToastId3: string = "toast-id-3";
-const customToastId4: string = "toast-id-4";
 
 export const DefaultInputsAndSearchButtonView = memo(
   ({

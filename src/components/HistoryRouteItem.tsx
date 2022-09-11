@@ -1,10 +1,9 @@
 import { PDFDownloadLink } from "@react-pdf/renderer";
 import classNames from "classnames";
-import React, { useEffect } from "react";
+import React from "react";
 import { HistoryRoute } from "../types";
 import { PdfDocument } from "./PdfDocument";
 import { RouteDetail } from "./index";
-import { useRoute } from "../contexts/RouteContext";
 
 interface HistoryRouteI {
   historyRoute: HistoryRoute;
@@ -18,7 +17,6 @@ export function HistoryRouteItem({
   additionalClassNames,
 }: HistoryRouteI) {
   const { name, distance, duration, cost } = historyRoute;
-  console.log(historyRoute);
   const currentIndex: number = index + 1;
 
   const containerClasses = classNames(

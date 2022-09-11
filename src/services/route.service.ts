@@ -35,6 +35,7 @@ interface ReturnedDataStructure {
 }
 
 export const getRoute = async (api: string): Promise<ReturnedDataStructure> => {
+  // how to type fetch?
   const data = (await fetch(api)).json();
 
   return data;

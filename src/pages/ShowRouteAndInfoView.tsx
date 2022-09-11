@@ -1,37 +1,56 @@
 import React, { useEffect, useState } from "react";
 import { MapContainer, TileLayer } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
-import { LatLngBoundsExpression } from "leaflet";
-import {
-  Location,
-  NavigateFunction,
-  useLocation,
-  useNavigate,
-} from "react-router-dom";
-import { SingleRoute } from "../types";
+import { useNavigate } from "react-router-dom";
 import { Routing, ShowRouteWrapper } from "../components/index";
 import { HistoryRouteItem } from "../components/HistoryRouteItem";
 import { useRoute } from "../contexts/RouteContext";
+import { useTransferredState } from "../hooks/useTransferredState";
+import { useBounds } from "../hooks/useBounds";
 // fix problem with these styles above (warning)
 
 export const ShowRouteAndInfoView = () => {
   const [canRouteBeCalculated, setCanRouteBeCalculated] = useState(true);
 
+  const navigate = useNavigate();
+
   const { routeInfo, routesHistoryList, setRoutesHistoryList } = useRoute();
 
-  const navigate: NavigateFunction = useNavigate();
+  const {
+    routeFrom,
+    firstIntermediateStop,
+    secondIntermediateStop,
+    routeTo,
+    state,
+  } = useTransferredState();
 
-  const location: Location = useLocation();
-  const state = location.state as SingleRoute[];
-
-  const [routeFrom, firstIntermediateStop, secondIntermediateStop, routeTo] =
-    state;
+  const { mapBounds, routingBounds } = useBounds();
 
   let allLocationsInRoute = ``;
+
   const lastElemenentOfRoutesHistoryList =
     routesHistoryList[routesHistoryList.length - 1];
 
-  console.log(lastElemenentOfRoutesHistoryList);
+  const displayHistoryRouteItemIfCanBeCalculated = canRouteBeCalculated ? (
+    lastElemenentOfRoutesHistoryList && (
+      <HistoryRouteItem
+        historyRoute={lastElemenentOfRoutesHistoryList}
+        index={0}
+        additionalClassNames="w-full"
+      />
+    )
+  ) : (
+    <div className="flex w-full h-16 md:px-12 bg-green-50 border-2 border-green-500 rounded-md mb-3 items-center justify-center">
+      <h2 className="text-center">This route cannot be traveled by car</h2>
+    </div>
+  );
+
+  const firstViaWaypoint =
+    firstIntermediateStop.title &&
+    `&via=${firstIntermediateStop.position.latitude},${firstIntermediateStop.position.longitude}`;
+  const secondViaWaypoint =
+    secondIntermediateStop.title &&
+    `&via=${secondIntermediateStop.position.latitude},${secondIntermediateStop.position.longitude}`;
 
   for (const [index, place] of state.entries()) {
     place.title &&
@@ -39,47 +58,6 @@ export const ShowRouteAndInfoView = () => {
         `${place.title}${index === 3 ? "" : " - "}`
       ));
   }
-
-  const mapBounds: LatLngBoundsExpression = [
-    [routeFrom.position.latitude, routeFrom.position.longitude],
-    [routeTo.position.latitude, routeTo.position.longitude],
-  ];
-
-  const routingBounds: number[][] = [
-    [routeFrom.position.latitude, routeFrom.position.longitude],
-    [routeTo.position.latitude, routeTo.position.longitude],
-  ];
-
-  firstIntermediateStop.title &&
-    mapBounds.push([
-      firstIntermediateStop.position.latitude,
-      firstIntermediateStop.position.longitude,
-    ]);
-
-  firstIntermediateStop.title &&
-    routingBounds.splice(1, 0, [
-      firstIntermediateStop.position.latitude,
-      firstIntermediateStop.position.longitude,
-    ]);
-
-  secondIntermediateStop.title &&
-    mapBounds.push([
-      secondIntermediateStop.position.latitude,
-      secondIntermediateStop.position.longitude,
-    ]);
-
-  secondIntermediateStop.title &&
-    routingBounds.splice(routingBounds.length === 3 ? 2 : 1, 0, [
-      secondIntermediateStop.position.latitude,
-      secondIntermediateStop.position.longitude,
-    ]);
-
-  const firstViaWaypoint: string =
-    firstIntermediateStop.title &&
-    `&via=${firstIntermediateStop.position.latitude},${firstIntermediateStop.position.longitude}`;
-  const secondViaWaypoint: string =
-    secondIntermediateStop.title &&
-    `&via=${secondIntermediateStop.position.latitude},${secondIntermediateStop.position.longitude}`;
 
   const handleGoBack = () => {
     navigate(-1);
@@ -125,8 +103,6 @@ export const ShowRouteAndInfoView = () => {
             },
           ]);
         } else setCanRouteBeCalculated(false);
-
-        // do I want to not display fetched route(but can't be done driving by car)? In the history routes
       });
   }, []);
 
@@ -153,17 +129,7 @@ export const ShowRouteAndInfoView = () => {
         <Routing routingBounds={routingBounds} />
       </MapContainer>
       <div className="flex justify-center">
-        {canRouteBeCalculated ? (
-          lastElemenentOfRoutesHistoryList && (
-            <HistoryRouteItem
-              historyRoute={lastElemenentOfRoutesHistoryList}
-              index={0}
-              additionalClassNames="w-full"
-            />
-          )
-        ) : (
-          <h3>The route can't be done driving by car</h3>
-        )}
+        {displayHistoryRouteItemIfCanBeCalculated}
       </div>
     </ShowRouteWrapper>
   );

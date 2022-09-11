@@ -4,7 +4,7 @@ import { toast, ToastItem } from "react-toastify";
 import { SingleRoute } from "../types";
 import { useNotificationCenter } from "react-toastify/addons/use-notification-center";
 import "react-toastify/dist/ReactToastify.css";
-import { defaultRouteItem } from "../constants";
+import { defaultRouteItem, defaultFetchedRouteState } from "../constants";
 import {
   PricePerKilometerView,
   DefaultInputsAndSearchButtonView,
@@ -22,12 +22,9 @@ export const RouteDetermination = memo(() => {
 
   const { notifications, remove } = useNotificationCenter<{}>();
 
-  const [fetchedRoute, setFetchedRoute] = useState<SingleRoute[]>([
-    defaultRouteItem,
-    defaultRouteItem,
-    defaultRouteItem,
-    defaultRouteItem,
-  ]);
+  const [fetchedRoute, setFetchedRoute] = useState<SingleRoute[]>(
+    defaultFetchedRouteState
+  );
 
   const [areIntermediateStopsVisible, setAreIntermediateStopsVisible] =
     useState<boolean>(false);
@@ -82,12 +79,7 @@ export const RouteDetermination = memo(() => {
   }, [fetchedRoute, navigate, removeNotificationFromNotificationCenter]);
 
   useEffect(() => {
-    setFetchedRoute([
-      defaultRouteItem,
-      defaultRouteItem,
-      defaultRouteItem,
-      defaultRouteItem,
-    ]);
+    setFetchedRoute(defaultFetchedRouteState);
   }, [notifications]);
 
   useEffect(() => {

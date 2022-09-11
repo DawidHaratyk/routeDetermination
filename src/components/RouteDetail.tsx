@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 
 interface IRouteDetail {
   containerClasses?: string;
@@ -6,15 +6,13 @@ interface IRouteDetail {
   detailValue: string | number;
 }
 
-export function RouteDetail({
-  containerClasses = "text-xs",
-  detailName,
-  detailValue,
-}: IRouteDetail) {
-  return (
-    <span className={containerClasses}>
-      {detailName}
-      <span className="font-bold"> {detailValue}</span>
-    </span>
-  );
-}
+export const RouteDetail = memo(
+  ({ containerClasses = "text-xs", detailName, detailValue }: IRouteDetail) => {
+    return (
+      <span className={containerClasses}>
+        {detailName}
+        <span className="font-bold"> {detailValue}</span>
+      </span>
+    );
+  }
+);
