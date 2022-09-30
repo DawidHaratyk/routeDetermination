@@ -11,25 +11,26 @@ import {
   customToastId3,
   customToastId4,
 } from "../constants";
+import { useRoute } from "../contexts/RouteContext";
 
 interface DefaultInputsAndSearchButtonViewI {
   areIntermediateStopsVisible: boolean;
   setFetchedRoute: React.Dispatch<React.SetStateAction<SingleRoute[]>>;
-  routeFrom: string;
-  routeTo: string;
-  firstIntermediateStop: string;
-  secondIntermediateStop: string;
 }
 
 export const DefaultInputsAndSearchButtonView = memo(
   ({
     areIntermediateStopsVisible,
     setFetchedRoute,
-    routeFrom,
-    routeTo,
-    firstIntermediateStop,
-    secondIntermediateStop,
   }: DefaultInputsAndSearchButtonViewI) => {
+    const { routeInfo } = useRoute();
+    const {
+      routeFrom,
+      routeTo,
+      firstIntermediateStop,
+      secondIntermediateStop,
+    } = routeInfo;
+
     const {
       routeFromAPI,
       routeToAPI,

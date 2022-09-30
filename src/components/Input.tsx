@@ -20,6 +20,7 @@ export const Input = memo(
         data-route-key={dataRouteKey}
         value={value}
         onChange={(e) => handleRouteInfoChange(e)}
+        data-testid={dataRouteKey}
       />
     );
   }

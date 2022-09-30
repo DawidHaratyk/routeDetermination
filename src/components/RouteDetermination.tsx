@@ -103,8 +103,6 @@ export const RouteDetermination = memo(() => {
           <DefaultInputsAndSearchButtonView
             areIntermediateStopsVisible={areIntermediateStopsVisible}
             setFetchedRoute={setFetchedRoute}
-            {...routeInfo}
-            // pass routeInfo here or import context in the DefaultInputsAndSearchButtonView component?
           />
           {areIntermediateStopsVisible && (
             <AdditionalInputs
