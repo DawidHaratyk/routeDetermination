@@ -19,6 +19,7 @@ export function Routing({ routingBounds }) {
     if (!map) return;
 
     const routingControl = L.Routing.control({
+      serviceUrl: "http://my-osrm/route/v1",
       waypoints: currentBounds,
       routeWhileDragging: false,
       draggableWaypoints: false,
