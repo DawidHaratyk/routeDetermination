@@ -8,6 +8,8 @@ export const useTransferredState = () => {
   const [routeFrom, firstIntermediateStop, secondIntermediateStop, routeTo] =
     state;
 
+  // nie ogarniam po co to jest
+
   return {
     routeFrom,
     firstIntermediateStop,

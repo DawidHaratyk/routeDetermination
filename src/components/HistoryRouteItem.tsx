@@ -1,6 +1,5 @@
 import { PDFDownloadLink } from "@react-pdf/renderer";
 import classNames from "classnames";
-import React from "react";
 import { HistoryRoute } from "../types";
 import { PdfDocument } from "./PdfDocument";
 import { RouteDetail } from "./index";
