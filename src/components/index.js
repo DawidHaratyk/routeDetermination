@@ -9,3 +9,4 @@ export { HistoryRouteItem } from "./HistoryRouteItem";
 export { ShowRouteWrapper } from "./ShowRouteWrapper";
 export { PricePerKilometerView } from "./PricePerKilometerView";
 export { DefaultInputsAndSearchButtonView } from "./DefaultInputsAndSearchButtonView";
+export { ToastWrapper } from "./ToastWrapper";
