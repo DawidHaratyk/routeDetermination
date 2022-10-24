@@ -17,7 +17,7 @@ export function HistoryRouteItem({
   additionalClassNames,
 }: HistoryRouteI) {
   const { name, distance, duration, cost } = historyRoute;
-  const currentIndex: number = index + 1;
+  const currentIndex = index + 1;
 
   const containerClasses = classNames(
     `flex w-11/12 md:w-4/5 h-24 lg:h-28 bg-green-50 border-2 border-green-500 rounded-md mb-3 items-center ${additionalClassNames}`,
