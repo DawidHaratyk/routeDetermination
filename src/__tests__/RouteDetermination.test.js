@@ -4,15 +4,17 @@ import { BrowserRouter } from "react-router-dom";
 import { RouteDetermination } from "../components";
 import { RouteProvider } from "../contexts/RouteContext";
 
+const RouteDeterminationMock = () => (
+  <BrowserRouter>
+    <RouteProvider>
+      <RouteDetermination />
+    </RouteProvider>
+  </BrowserRouter>
+);
+
 describe("RouteDetermination", () => {
   test("check if initial state is correct on first render and on click (add intermediate stops) button", () => {
-    render(
-      <BrowserRouter>
-        <RouteProvider>
-          <RouteDetermination />
-        </RouteProvider>
-      </BrowserRouter>
-    );
+    render(RouteDeterminationMock);
 
     // check if on initial render the AdditionalInputs component is not visible
     const additionalInputsContainer = screen.queryByTestId(
@@ -48,13 +50,7 @@ describe("RouteDetermination", () => {
   });
 
   test("check if alert is visible when (from where input) value is empty", async () => {
-    render(
-      <BrowserRouter>
-        <RouteProvider>
-          <RouteDetermination />
-        </RouteProvider>
-      </BrowserRouter>
-    );
+    render(RouteDeterminationMock);
 
     const fromWhereInput = screen.getByPlaceholderText(/from where/i).value;
     expect(fromWhereInput).toBe("");
@@ -70,13 +66,7 @@ describe("RouteDetermination", () => {
   });
 
   test("check if alert is visible when (from to input) value is empty", async () => {
-    render(
-      <BrowserRouter>
-        <RouteProvider>
-          <RouteDetermination />
-        </RouteProvider>
-      </BrowserRouter>
-    );
+    render(RouteDeterminationMock);
 
     const fromToInput = screen.getByPlaceholderText(/to where/i).value;
     expect(fromToInput).toBe("");
