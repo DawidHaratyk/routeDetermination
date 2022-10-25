@@ -20,9 +20,11 @@ export const useBounds = () => {
       firstIntermediateStop.position.latitude,
       firstIntermediateStop.position.longitude,
     ]);
-
+  // pomyśl nad tym strasznie źle to wyglada 
   firstIntermediateStop.title &&
     routingBounds.splice(1, 0, [
+
+      //dałbym to do consta i potem robił...nazwa zmiennej
       firstIntermediateStop.position.latitude,
       firstIntermediateStop.position.longitude,
     ]);

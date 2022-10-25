@@ -1,6 +1,4 @@
-import React from "react";
 import { Input } from "./Input";
-
 interface AdditionalInputsI {
   firstIntermediateStop: string;
   secondIntermediateStop: string;
@@ -11,7 +9,7 @@ export const AdditionalInputs = ({
   secondIntermediateStop,
 }: AdditionalInputsI) => {
   return (
-    <div className="flex mt-3" data-testid="additional-inputs-container">
+    <div className="flex mt-3" data-test-id="additional-inputs-container">
       <Input
         classes="border-[1px] border-black rounded-l-lg border-right-[1px] border-r-[0px] py-3 px-4 text-sm sm:text-lg w-1/3 sm:w-5/12 border-opacity-40"
         placeholder="Intermediate stop 1"

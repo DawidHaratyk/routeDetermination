@@ -7,6 +7,8 @@ export const useApiUrls = () => {
     routeInfo;
 
   const apiUrlList = allLocations.map((apiLocation) => {
+    //odpalałbym to w momenciue jak user klikne button
+    //dodatkowo  pokwiliłbym czy  nie da sie tego zrobic (podpowiedź: da się) tak aby jak np kiedys bys chciał dodać jeszcze trzeci  przystanek to nie musiał zmieniać tego kodu
     // creating array of all api url's
     if (apiLocation === "routeFrom")
       return routeFrom && `${API}${encodeURIComponent(routeFrom)}`;

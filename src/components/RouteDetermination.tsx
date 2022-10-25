@@ -14,6 +14,7 @@ import { AdditionalInputs } from "./AdditionalInputs";
 import { ToastWrapper } from "./ToastWrapper";
 
 export const RouteDetermination = memo(() => {
+  console.log(defaultFetchedRouteState);
   const { routeInfo, setRouteInfo } = useRoute();
   const { firstIntermediateStop, secondIntermediateStop, ratePerKilometer } =
     routeInfo;

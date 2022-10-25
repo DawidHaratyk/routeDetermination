@@ -1,4 +1,4 @@
-import React, { memo } from "react";
+import { memo } from "react";
 import { useRouteInfoChange } from "../hooks/useRouteInfoChange";
 
 interface InputI {
@@ -20,7 +20,7 @@ export const Input = memo(
         data-route-key={dataRouteKey}
         value={value}
         onChange={(e) => handleRouteInfoChange(e)}
-        data-testid={dataRouteKey}
+        data-test-id={dataRouteKey}
       />
     );
   }

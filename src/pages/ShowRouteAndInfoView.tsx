@@ -28,13 +28,13 @@ export const ShowRouteAndInfoView = () => {
 
   let allLocationsInRoute = ``;
 
-  const lastElemenentOfRoutesHistoryList =
+  const lastElementOfRoutesHistoryList =
     routesHistoryList[routesHistoryList.length - 1];
 
   const displayHistoryRouteItemIfCanBeCalculated = canRouteBeCalculated ? (
-    lastElemenentOfRoutesHistoryList && (
+    lastElementOfRoutesHistoryList && (
       <HistoryRouteItem
-        historyRoute={lastElemenentOfRoutesHistoryList}
+        historyRoute={lastElementOfRoutesHistoryList}
         index={0}
         additionalClassNames="w-full"
       />

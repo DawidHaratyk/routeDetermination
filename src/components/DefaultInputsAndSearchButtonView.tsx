@@ -53,6 +53,7 @@ export const DefaultInputsAndSearchButtonView = memo(
 
         const { position, title } = data.items[0];
 
+        // dałbym tutaj data.item do consta
         data.items.length
           ? setFetchedRoute((prevState) => {
               const newFetchedRoute = prevState.map((locationItem, key) => {
@@ -69,7 +70,8 @@ export const DefaultInputsAndSearchButtonView = memo(
 
               return newFetchedRoute;
             })
-          : toast.warn("Wrong from where value entered!", {
+          : //toast.warn też powtarza się
+            toast.warn("Wrong from where value entered!", {
               toastId: customToastId1,
             });
       } catch (error) {
@@ -90,6 +92,8 @@ export const DefaultInputsAndSearchButtonView = memo(
         const data = await getRoute(routeToAPI);
 
         const { position, title } = data.items[0];
+
+        // setFetchedRoute masz powtarzający się kod, który można wydzielić do osobnej funkcji
 
         data.items.length
           ? setFetchedRoute((prevState) => {
