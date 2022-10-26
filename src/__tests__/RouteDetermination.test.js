@@ -1,20 +1,11 @@
-import { render, screen, waitFor } from "@testing-library/react";
+import { screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { BrowserRouter } from "react-router-dom";
 import { RouteDetermination } from "../components";
-import { RouteProvider } from "../contexts/RouteContext";
-
-const RouteDeterminationMock = () => (
-  <BrowserRouter>
-    <RouteProvider>
-      <RouteDetermination />
-    </RouteProvider>
-  </BrowserRouter>
-);
+import { renderComponent } from "../utils/renderComponent";
 
 describe("RouteDetermination", () => {
   test("check if initial state is correct on first render and on click (add intermediate stops) button", () => {
-    render(RouteDeterminationMock);
+    renderComponent(<RouteDetermination />);
 
     // check if on initial render the AdditionalInputs component is not visible
     const additionalInputsContainer = screen.queryByTestId(
@@ -30,11 +21,11 @@ describe("RouteDetermination", () => {
 
     // check state of additional inputs (they should be empty)
     const firstIntermediateStopInputValue =
-      screen.getByPlaceholderText(/intermediate stop 1/i).textContent;
-    expect(firstIntermediateStopInputValue).toBe("");
+      screen.getByPlaceholderText(/intermediate stop 1/i);
+    expect(firstIntermediateStopInputValue).toHaveValue("");
     const secondIntermediateStopInputValue =
-      screen.getByPlaceholderText(/intermediate stop 2/i).textContent;
-    expect(secondIntermediateStopInputValue).toBe("");
+      screen.getByPlaceholderText(/intermediate stop 2/i);
+    expect(secondIntermediateStopInputValue).toHaveValue("");
 
     // check additional inputs visibility
     const visibleAdditionalInputsContainer = screen.queryByTestId(
@@ -50,34 +41,28 @@ describe("RouteDetermination", () => {
   });
 
   test("check if alert is visible when (from where input) value is empty", async () => {
-    render(RouteDeterminationMock);
+    renderComponent(<RouteDetermination />);
 
-    const fromWhereInput = screen.getByPlaceholderText(/from where/i).value;
-    expect(fromWhereInput).toBe("");
+    const fromWhereInput = screen.getByPlaceholderText(/from where/i);
+    expect(fromWhereInput).toHaveValue("");
 
     const submitButton = screen.getByRole("button", { name: /search/i });
     userEvent.click(submitButton);
 
-    await waitFor(() => {
-      const warning = screen.getByText(/wrong from where value entered!/i);
-
-      expect(warning).toBeInTheDocument();
-    });
+    const warning = await screen.findByText(/wrong from where value entered!/i);
+    expect(warning).toBeInTheDocument();
   });
 
   test("check if alert is visible when (from to input) value is empty", async () => {
-    render(RouteDeterminationMock);
+    renderComponent(<RouteDetermination />);
 
-    const fromToInput = screen.getByPlaceholderText(/to where/i).value;
-    expect(fromToInput).toBe("");
+    const fromToInput = screen.getByPlaceholderText(/to where/i);
+    expect(fromToInput).toHaveValue("");
 
     const submitButton = screen.getByRole("button", { name: /search/i });
     userEvent.click(submitButton);
 
-    await waitFor(() => {
-      const warning = screen.getByText(/wrong from to value entered!/i);
-
-      expect(warning).toBeInTheDocument();
-    });
+    const warning = await screen.findByText(/wrong from to value entered!/i);
+    expect(warning).toBeInTheDocument();
   });
 });

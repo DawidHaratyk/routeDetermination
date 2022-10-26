@@ -9,9 +9,11 @@ interface IRouteDetail {
 export const RouteDetail = memo(
   ({ containerClasses = "text-xs", detailName, detailValue }: IRouteDetail) => {
     return (
-      <span className={containerClasses}>
+      <span className={containerClasses} data-testid="container">
         {detailName}
-        <span className="font-bold"> {detailValue}</span>
+        <span className="font-bold" data-testid="value">
+          {detailValue}
+        </span>
       </span>
     );
   }
