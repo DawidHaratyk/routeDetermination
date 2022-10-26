@@ -65,4 +65,15 @@ describe("RouteDetermination", () => {
     const warning = await screen.findByText(/wrong from to value entered!/i);
     expect(warning).toBeInTheDocument();
   });
+
+  test("check intermediateStopsButtonText initial value", () => {
+    renderComponent(<RouteDetermination />);
+
+    const intermediateStopsButton = screen.getByRole("button", {
+      name: /add intermediate stops/i,
+    });
+    expect(intermediateStopsButton).toHaveTextContent(
+      /add intermediate stops/i
+    );
+  });
 });
