@@ -59,7 +59,7 @@ export function HistoryRouteItem({
               detailValue={cost}
             />
           </div>
-          {additionalClassNames && (
+          {additionalClassNames ? (
             <PDFDownloadLink
               document={<PdfDocument {...historyRoute} />}
               fileName="routeDetails"
@@ -68,7 +68,7 @@ export function HistoryRouteItem({
             >
               Generate PDF
             </PDFDownloadLink>
-          )}
+          ) : null}
         </div>
       </div>
     </div>
