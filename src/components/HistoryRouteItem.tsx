@@ -17,6 +17,7 @@ export function HistoryRouteItem({
   additionalClassNames,
 }: HistoryRouteI) {
   const { name, distance, duration, cost } = historyRoute;
+
   const currentIndex = index + 1;
 
   const containerClasses = classNames(
@@ -51,7 +52,7 @@ export function HistoryRouteItem({
             <RouteDetail
               containerClasses="text-xs inline-block mr-5 lg:mr-12 sm:mr-4"
               detailName="Czas przejazdu:"
-              detailValue={duration}
+              detailValue={duration ? duration : 0}
             />
             <RouteDetail
               containerClasses="text-xs inline-block mr-2 lg:mr-12 sm:mr-4"

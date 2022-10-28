@@ -104,7 +104,6 @@ export const ShowRouteAndInfoView = () => {
           ]);
         } else setCanRouteBeCalculated(false);
       });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

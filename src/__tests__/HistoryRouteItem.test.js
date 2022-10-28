@@ -3,15 +3,15 @@ import { HistoryRouteItem } from "../components/index";
 import { renderComponent } from "../utils/renderComponent";
 
 jest.mock("@react-pdf/renderer", () => ({
-  // PDFDownloadLink: function PDFDownloadLink({ children }) {
-  //   return <>{children}</>;
-  // },
-  // StyleSheet: { create: () => {} },
-  // Font: { register: () => {} },
-  // Document: () => <div>Document</div>,
-  // Page: () => <div>Page</div>,
-  // Text: () => <div>Text</div>,
-  // View: () => <div>View</div>,
+  PDFDownloadLink: function PDFDownloadLink({ children }) {
+    return <>{children}</>;
+  },
+  StyleSheet: { create: () => {} },
+  Font: { register: () => {} },
+  Document: (children) => <div>{children}</div>,
+  Page: (children) => <div>{children}</div>,
+  Text: (children) => <div>{children}</div>,
+  View: (children) => <div>{children}</div>,
 }));
 
 describe("HistoryRouteItem", () => {
@@ -25,16 +25,26 @@ describe("HistoryRouteItem", () => {
           cost: "500",
         }}
         index={5}
-        additionalClassNames="m-10"
       />
     );
 
-    // eslint-disable-next-line testing-library/no-debugging-utils
-    // screen.debug();
+    expect(screen.queryByText(/generate pdf/i)).not.toBeInTheDocument();
+  });
 
-    // const generatePdfButton = screen.getByRole("link", {
-    //   name: /generate pdf/i,
-    // });
-    // expect(generatePdfButton).not.toBeInTheDocument();
+  test("there is Generate PDF button when passing additionalClassNames prop", () => {
+    renderComponent(
+      <HistoryRouteItem
+        historyRoute={{
+          name: "Kraków - Mielno",
+          distance: "45",
+          duration: "1000",
+          cost: "500",
+        }}
+        index={5}
+        additionalClassNames="m-10 p-8"
+      />
+    );
+
+    expect(screen.getByText(/generate pdf/i)).toBeInTheDocument();
   });
 });
