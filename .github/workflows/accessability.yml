@@ -1,21 +1,15 @@
 name: accessibility
-on:
-  push:
-    branches:
-      - main
+run-name: Axe-core accessibility test
+on: [push]
 jobs:
-  check-accessibility:
+  check-bats-version:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
         with:
-          node-version: '14.x'
+          node-version: '14'
       - name: Install http-server and wait-on
-        run: npm install http-server wait-on -g
-      - name: Start http-server and wait for it to be ready
-        run: |
-          http-server -p 8080 &
-          wait-on http://localhost:8080
+        run: npm start & npx wait-on http://localhost:8080
       - name: Run Axe-core accessibility test
         run: npx axe http://localhost:8080
