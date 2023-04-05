@@ -18,4 +18,4 @@ jobs:
           http-server -p 8080 &
           wait-on http://127.0.0.1:8080
       - name: Run Axe-core accessibility test
-        run: npx axe http://127.0.0.1:8080
+        run: npx axe http://localhost:8080
