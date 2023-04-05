@@ -9,8 +9,12 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: '14'
-      - run: npm install @axe-core/cli -g
-      - run: npx http-server
-      - run: npx wait-on http://127.0.0.1:8080
+      - name: Install http-server and wait-on
+        run: npm install http-server wait-on
+      - name: Start http-server
+        run: http-server -p 8080 &
+        background: true
+      - name: Wait for server to start
+        run: wait-on http://localhost:8080
       - name: Run Axe-core accessibility test
-        run: axe http://localhost:3000
+        run: npx axe http://localhost:8080
