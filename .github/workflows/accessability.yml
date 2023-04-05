@@ -11,7 +11,5 @@ jobs:
           node-version: '14'
       - name: Install http-server and wait-onn
         run: npx http-server
-      - name: Wait for server to start
-        run: wait-on http://localhost:8080
       - name: Run Axe-core accessibility test
         run: npx axe http://localhost:8080
