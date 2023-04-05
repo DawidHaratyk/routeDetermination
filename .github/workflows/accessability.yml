@@ -11,6 +11,6 @@ jobs:
           node-version: '14'
       - run: npm install @axe-core/cli -g
       - run: npx http-server
-      - run: npm start & npx wait-on http://localhost:3000
+      - run: npx wait-on http://127.0.0.1:8080
       - name: Run Axe-core accessibility test
         run: axe http://localhost:3000
