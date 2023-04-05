@@ -9,7 +9,7 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: '14'
-      - name: Install http-server and wait-on
+      - name: Install http-server and wait-onn
         run: npx http-server -p 8080
       - name: Wait for server to start
         run: wait-on http://localhost:8080
