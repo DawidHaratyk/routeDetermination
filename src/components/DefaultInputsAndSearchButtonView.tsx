@@ -1,17 +1,17 @@
-import React, { memo } from "react";
-import { getRoute } from "../services/route.service";
-import { SingleRoute } from "../types";
-import { Input } from "./index";
-import { defaultRouteItem } from "../constants";
-import { toast } from "react-toastify";
-import { useApiUrls } from "../hooks/useApiUrls";
+import React, { memo } from 'react';
+import { getRoute } from '../services/route.service';
+import { SingleRoute } from '../types';
+import { Input } from './index';
+import { defaultRouteItem } from '../constants';
+import { toast } from 'react-toastify';
+import { useApiUrls } from '../hooks/useApiUrls';
 import {
   customToastId1,
   customToastId2,
   customToastId3,
   customToastId4,
-} from "../constants";
-import { useRoute } from "../contexts/RouteContext";
+} from '../constants';
+import { useRoute } from '../contexts/RouteContext';
 
 interface DefaultInputsAndSearchButtonViewI {
   areIntermediateStopsVisible: boolean;
@@ -69,7 +69,7 @@ export const DefaultInputsAndSearchButtonView = memo(
 
               return newFetchedRoute;
             })
-          : toast.warn("Wrong from where value entered!", {
+          : toast.warn('Wrong from where value entered!', {
               toastId: customToastId1,
             });
       } catch (error) {
@@ -81,7 +81,7 @@ export const DefaultInputsAndSearchButtonView = memo(
 
           return newFetchedRoute;
         });
-        toast.warn("Wrong from where value entered!", {
+        toast.warn('Wrong from where value entered!', {
           toastId: customToastId1,
         });
       }
@@ -107,7 +107,7 @@ export const DefaultInputsAndSearchButtonView = memo(
 
               return newFetchedRoute;
             })
-          : toast.warn("Wrong from where value entered!", {
+          : toast.warn('Wrong from where value entered!', {
               toastId: customToastId2,
             });
       } catch {
@@ -119,7 +119,7 @@ export const DefaultInputsAndSearchButtonView = memo(
 
           return newFetchedRoute;
         });
-        toast.warn("Wrong from to value entered!", {
+        toast.warn('Wrong from to value entered!', {
           toastId: customToastId2,
         });
       }
@@ -156,7 +156,7 @@ export const DefaultInputsAndSearchButtonView = memo(
             return newFetchedRoute;
           });
 
-          toast.warn("Wrong first intermediate stop value entered!", {
+          toast.warn('Wrong first intermediate stop value entered!', {
             toastId: customToastId3,
           });
         }
@@ -194,7 +194,7 @@ export const DefaultInputsAndSearchButtonView = memo(
             return newFetchedRoute;
           });
 
-          toast.warn("Wrong second intermediate stop value entered!", {
+          toast.warn('Wrong second intermediate stop value entered!', {
             toastId: customToastId4,
           });
         }
@@ -216,7 +216,7 @@ export const DefaultInputsAndSearchButtonView = memo(
           value={routeTo}
         />
         <button
-          className="bg-green-500 w-1/3 sm:w-1/6 rounded-r-lg uppercase text-white font-bold text-center py-3 px-1 text-sm sm:text-lg"
+          className="bg-green-500 w-1/3 sm:w-1/6 rounded-r-lg uppercase text-white font-bold text-center py-3 px-1 text-sm sm:text-lg dark:text-white"
           onClick={handleNotify}
         >
           Search

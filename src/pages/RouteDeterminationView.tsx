@@ -1,5 +1,5 @@
-import React from "react";
-import { RouteDetermination, RoutesHistory } from "../components";
+import React from 'react';
+import { RouteDetermination, RoutesHistory } from '../components';
 
 const RouteDeterminationView = () => {
   return (

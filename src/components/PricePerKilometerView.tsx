@@ -1,5 +1,5 @@
-import React, { memo } from "react";
-import { useRouteInfoChange } from "../hooks/useRouteInfoChange";
+import React, { memo } from 'react';
+import { useRouteInfoChange } from '../hooks/useRouteInfoChange';
 
 interface PricePerKilometerViewI {
   ratePerKilometer: number;
@@ -11,7 +11,9 @@ export const PricePerKilometerView = memo(
 
     return (
       <div className="flex justify-center items-center">
-        <span className="text-lg font-semibold">Rate per kilometer: </span>
+        <span className="text-lg font-semibold dark:text-white ">
+          Rate per kilometer:{' '}
+        </span>
         <input
           type="number"
           className="border-[1px] border-black rounded py-1 px-4 text-lg w-1/4 border-opacity-40 ml-4"

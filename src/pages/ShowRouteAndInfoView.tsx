@@ -1,13 +1,12 @@
-import React, { useEffect, useState } from "react";
-import { MapContainer, TileLayer } from "react-leaflet";
-import "leaflet/dist/leaflet.css";
-import { useNavigate } from "react-router-dom";
-import { Routing, ShowRouteWrapper } from "../components/index";
-import { HistoryRouteItem } from "../components/HistoryRouteItem";
-import { useRoute } from "../contexts/RouteContext";
-import { useTransferredState } from "../hooks/useTransferredState";
-import { useBounds } from "../hooks/useBounds";
-// fix problem with these styles above (warning)
+import React, { useEffect, useState } from 'react';
+import { MapContainer, TileLayer } from 'react-leaflet';
+import 'leaflet/dist/leaflet.css';
+import { useNavigate } from 'react-router-dom';
+import { Routing, ShowRouteWrapper } from '../components/index';
+import { HistoryRouteItem } from '../components/HistoryRouteItem';
+import { useRoute } from '../contexts/RouteContext';
+import { useTransferredState } from '../hooks/useTransferredState';
+import { useBounds } from '../hooks/useBounds';
 
 export const ShowRouteAndInfoView = () => {
   const [canRouteBeCalculated, setCanRouteBeCalculated] = useState(true);
@@ -55,7 +54,7 @@ export const ShowRouteAndInfoView = () => {
   for (const [index, place] of state.entries()) {
     place.title &&
       (allLocationsInRoute = allLocationsInRoute.concat(
-        `${place.title}${index === 3 ? "" : " - "}`
+        `${place.title}${index === 3 ? '' : ' - '}`
       ));
   }
 
@@ -96,9 +95,9 @@ export const ShowRouteAndInfoView = () => {
             {
               name: allLocationsInRoute,
               distance: ` ${kilometers}km`,
-              duration: ` ${days ? days + "days" : ""} ${
-                hours ? hours + "hours" : ""
-              } ${minutes ? minutes + "minutes" : ""}`,
+              duration: ` ${days ? days + 'days' : ''} ${
+                hours ? hours + 'hours' : ''
+              } ${minutes ? minutes + 'minutes' : ''}`,
               cost: ` ${cost}zł`,
             },
           ]);
@@ -120,7 +119,7 @@ export const ShowRouteAndInfoView = () => {
       <MapContainer
         bounds={mapBounds}
         scrollWheelZoom={true}
-        style={{ height: "60vh", width: "80vw", marginBottom: "50px" }}
+        style={{ height: '60vh', width: '80vw', marginBottom: '50px' }}
       >
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'

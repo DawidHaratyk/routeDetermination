@@ -1,5 +1,5 @@
-import React, { memo } from "react";
-import { useRouteInfoChange } from "../hooks/useRouteInfoChange";
+import React, { memo } from 'react';
+import { useRouteInfoChange } from '../hooks/useRouteInfoChange';
 
 interface InputI {
   classes: string;
@@ -21,6 +21,7 @@ export const Input = memo(
         value={value}
         onChange={(e) => handleRouteInfoChange(e)}
         data-testid={dataRouteKey}
+        tabIndex={-1} // comment it to have accessibility on all inputs
       />
     );
   }
