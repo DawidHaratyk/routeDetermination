@@ -12,7 +12,7 @@ jobs:
         with:
           node-version: '14.x'
       - name: Install http-server and wait-on
-        run: npm install http-server wait-on -g
+        run: npm install http-server wait-on -g & npm install @axe-core/cli -g
       - name: Start http-server and wait for it to be ready
         run: |
           http-server -p 8080 &
