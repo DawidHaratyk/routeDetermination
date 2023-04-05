@@ -9,5 +9,6 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: '14'
+      - run: npm install axe-core
       - name: Run Axe-core accessibility test
-      - run: npx axe-cli ../public/index.html
+        run: npx axe-cli http://localhost:3000
