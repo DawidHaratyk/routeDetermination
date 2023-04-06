@@ -1,20 +1,18 @@
-name: accessibility
-on:
-  push:
-    branches:
-      - main
+name: Accessibility Checker
+
+on: [push, pull_request]
+
 jobs:
-  check-accessibility:
+  accessibility-check:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Accessibility Tests
+        uses: dacastdotcom/a11y-action@v3.3
         with:
-          node-version: '14.x'
-      - run: |
-          npm install
-          npm run build
-      - name: Run lighthouse
-        run: |
-          npm install -g @lhci/cli@0.7.x
-          lhci autorun
+          path: 'public'
+          reporter: 'v3'
+          levels: 'A, AA'
