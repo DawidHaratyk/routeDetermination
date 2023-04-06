@@ -1,18 +1,23 @@
-name: Accessibility Checker
-
-on: [push, pull_request]
-
+name: accessibility
+on:
+  push:
+    branches:
+      - main
 jobs:
-  accessibility-check:
+  check-accessibility:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Accessibility Tests
-        uses: dacastdotcom/a11y-action@v3.3
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+      - uses: a11ywatch/github-action@v1.14.0
         with:
-          path: 'public'
-          reporter: 'v3'
-          levels: 'A, AA'
+          WEBSITE_URL: $localhost:3000
+          SUBDOMAINS: true
+          TLD: false
+          SITEMAP: true
+          FAIL_ERRORS_COUNT: 1
+          LIST: true
+          FIX: false
+          UPGRADE: false
+          COMPUTER_VISION_SUBSCRIPTION_KEY: ${{ secrets.COMPUTER_VISION_SUBSCRIPTION_KEY }}
+          COMPUTER_VISION_ENDPOINT: ${{ secrets.COMPUTER_VISION_SUBSCRIPTION_KEY }}
