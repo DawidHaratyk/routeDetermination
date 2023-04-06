@@ -11,11 +11,10 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: '14.x'
-      - name: Install http-server and wait-on
-        run: npm install http-server wait-on -g & npm install @axe-core/cli -g
-      - name: Start http-server and wait for it to be ready
+      - run: |
+        npm install
+        npm run build
+      - name: Run lighthouse
         run: |
-          http-server -p 8080 &
-          wait-on http://127.0.0.1:8080
-      - name: Run Axe-core accessibility test
-        run: npx axe http://localhost:8080
+          npm install -g @lhci/cli@0.7.x
+          lhci autorun
