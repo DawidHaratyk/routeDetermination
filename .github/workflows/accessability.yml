@@ -12,8 +12,8 @@ jobs:
         with:
           node-version: '14.x'
       - run: |
-        npm install
-        npm run build
+          npm install
+          npm run build
       - name: Run lighthouse
         run: |
           npm install -g @lhci/cli@0.7.x
