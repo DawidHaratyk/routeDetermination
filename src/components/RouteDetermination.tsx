@@ -71,7 +71,7 @@ export const RouteDetermination = memo(() => {
           }, 3000);
         }
       }),
-    []
+    [remove]
   );
 
   const toggleTheme = () => {
@@ -93,7 +93,14 @@ export const RouteDetermination = memo(() => {
     ) {
       navigate('/foundRoute', { state: fetchedRoute });
     }
-  }, [fetchedRoute, navigate, removeNotificationFromNotificationCenter]);
+  }, [
+    fetchedRoute,
+    firstIntermediateStop,
+    navigate,
+    notifications.length,
+    removeNotificationFromNotificationCenter,
+    secondIntermediateStop,
+  ]);
 
   useEffect(() => {
     setFetchedRoute(defaultFetchedRouteState);
@@ -156,7 +163,7 @@ export const RouteDetermination = memo(() => {
           {intermediateStopsButtonText}
         </button>
         {/* these two elements below are not accessible */}
-        <img src="not-found" />
+        <img src="not-found" alt="not-found" />
         <p className="text-black">Microphone: {listening ? 'on' : 'off'}</p>
 
         <button

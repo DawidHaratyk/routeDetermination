@@ -103,7 +103,17 @@ export const ShowRouteAndInfoView = () => {
           ]);
         } else setCanRouteBeCalculated(false);
       });
-  }, []);
+  }, [
+    allLocationsInRoute,
+    firstViaWaypoint,
+    routeFrom.position.latitude,
+    routeFrom.position.longitude,
+    routeInfo.ratePerKilometer,
+    routeTo.position.latitude,
+    routeTo.position.longitude,
+    secondViaWaypoint,
+    setRoutesHistoryList,
+  ]);
 
   return (
     <ShowRouteWrapper>
