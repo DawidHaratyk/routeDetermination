@@ -163,7 +163,7 @@ export const RouteDetermination = memo(() => {
           {intermediateStopsButtonText}
         </button>
         {/* these two elements below are not accessible */}
-        <img src="not-found" alt="not-found" />
+        <img src="not-found" />
         <p className="text-black">Microphone: {listening ? 'on' : 'off'}</p>
 
         <button
