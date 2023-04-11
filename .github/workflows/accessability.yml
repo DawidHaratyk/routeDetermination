@@ -1,21 +1,19 @@
-name: CI
+name: CI Lighthouse
 on: [push]
 jobs:
-  lhci:
-    name: Lighthouse
+  lighthouse:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Use Node.js 12.x
+      - name: Setup node
         uses: actions/setup-node@v1
         with:
-          node-version: 12.x
-      - name: npm install, build
-        run: |
-          npm install
-      - name: run Lighthouse CI
-        run: |
-          npm install -g @lhci/cli@0.8.x
-          lhci autorun http://127.0.0.1:4000
+          node-version: '18.x'
+      - name: Install
+        run: npm ci && npm i -g http-server @lhci/cli
+      - name: Build
+        run: npm run build
+      - name: LighthouseCI
+        run: lhci autorun
         env:
           LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
