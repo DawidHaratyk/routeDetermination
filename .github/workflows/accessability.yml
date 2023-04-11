@@ -12,7 +12,7 @@ jobs:
       - name: Installing dependencies and packages
         run: npm ci && npm i -g http-server @lhci/cli
       - name: Building
-        run: npm run build
+        run: CI=false npm run build
       - name: Run lighthouse CI
         run: lhci autorun
         env:
