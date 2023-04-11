@@ -1,19 +1,20 @@
-name: Accessibility tests
+name: CI
 on: [push]
 jobs:
-  lighthouse:
+  lhci:
+    name: Lighthouse
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Setup node
+      - name: Use Node.js 12.x
         uses: actions/setup-node@v1
         with:
-          node-version: '18.x'
-      - name: Installing dependencies and packages
-        run: npm ci && npm i -g http-server @lhci/cli
-      - name: Building
-        run: CI=false npm run build
-      - name: Run lighthouse CI
-        run: lhci autorun
-        env:
-          LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
+          node-version: 12.x
+      - name: npm install, build
+        run: |
+          npm install
+          npm run generate
+      - name: run Lighthouse CI
+        run: |
+          npm install -g @lhci/cli@0.8.x
+          lhci autorun
